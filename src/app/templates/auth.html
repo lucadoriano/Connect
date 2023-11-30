@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if ctx %}
+<div class="d-flex flex-column justify-content-center align-items-center">
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label" for="email">Email</label>
+            <input class="form-control" name="email" type="text">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="password">Password</label>
+            <input class="form-control" name="password" type="password">
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="confirm-password">Confirm password</label>
+            <input class="form-control" name="confirm-password" type="password">
+        </div>
+        
+        <button class="btn btn-primary w-40" type="submit">Sign in</button>
+    </form>
+</div>
+{% else %}
+<div>
+    <form method="POST">
+        <div class="w-25 mb-3">
+            <label class="form-label" for="email">Email</label>
+            <input class="form-control" name="email" type="text">
+        </div>
+        <div class="w-25 mb-3">
+            <label class="form-label" for="password">Password</label>
+            <input class="form-control" name="password" type="password">
+        </div>
+        <button class="btn btn-primary w-40" type="submit">Sign in</button>
+    </form>
+</div>
+{% endif %}
+
+{% endblock %}
