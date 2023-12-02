@@ -1,0 +1,8 @@
+{% block header %}
+{% if current_user.is_authenticated %}
+    <h1>You are logged in as {{current_user.email}}</h1>
+    <a href="/logout">Log out</a>
+    {% else %}
+    <h1>You're not authenticated</h1>
+{% endif %}
+{% endblock %}
