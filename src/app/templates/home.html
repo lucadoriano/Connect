@@ -1,12 +1,4 @@
 {% extends "base.html" %}
 {% block content %}
-
-{% if current_user.is_authenticated %}
-<h1>You are logged in</h1>
-<a href="/logout">Log out</a>
-{% else %}
-<h1>You're not authenticated</h1>
-
-{% endif %}
-
+<h1>Home page</h1>
 {% endblock %}

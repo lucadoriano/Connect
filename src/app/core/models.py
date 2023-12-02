@@ -14,7 +14,7 @@ class User(Base, UserMixin):
     tutor = db.Column(Boolean, default=False)
     biography = db.Column(JSON, nullable=True)
 
-    def __init__(self, email, password, first_name, last_name,
+    def __init__(self, email, password, first_name=None, last_name=None,
                  biography=None):
         self.email = email
         self.password = password

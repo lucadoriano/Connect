@@ -1,39 +1,55 @@
 {% extends "base.html" %}
 {% block content %}
 
-{% if ctx %}
 <div class="d-flex flex-column justify-content-center align-items-center">
-    <form method="POST">
-        <div class="mb-3">
-            <label class="form-label" for="email">Email</label>
-            <input class="form-control" name="email" type="text">
-        </div>
-        <div class="mb-3">
-            <label class="form-label" for="password">Password</label>
-            <input class="form-control" name="password" type="password">
-        </div>
-        <div class="mb-3">
-            <label class="form-label" for="confirm-password">Confirm password</label>
-            <input class="form-control" name="confirm-password" type="password">
-        </div>
-        
-        <button class="btn btn-primary w-40" type="submit">Sign in</button>
-    </form>
+    {% if request.path == '/register' %}
+        <form method="POST">
+            {{ form.csrf_token }}
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control", size=40) }}
+            </div>
+            <div class="mb-3">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control", size=40) }}
+            </div>
+            <div class="mb-3">
+                {{ form.confirm_password.label(class="form-label") }}
+
+                {% if form.password.errors %}
+                    {{ form.confirm_password(class="form-control is-invalid", size=40) }}
+                        {% for error in form.password.errors %}
+                            <small class="invalid-feedback">{{error}}</small>
+                        {% endfor %}
+                {% else %}
+                    {{ form.confirm_password(class="form-control", size=40) }}
+                {% endif %}
+            </div>
+            <button class="btn btn-primary w-40" type="submit">Sign in</button>
+        </form>
+    {% else %}
+        <form method="POST">
+            {{ form.csrf_token }}
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{message}}
+                        </div>
+                    {% endfor %}    
+                {% endif %}
+            {% endwith %}    
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control", size=40) }}
+            </div>
+            <div class="mb-3">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control", size=40) }}
+            </div>
+            <button class="btn btn-primary w-40" type="submit">Sign in</button>
+        </form>
+    {% endif %}
 </div>
-{% else %}
-<div>
-    <form method="POST">
-        <div class="w-25 mb-3">
-            <label class="form-label" for="email">Email</label>
-            <input class="form-control" name="email" type="text">
-        </div>
-        <div class="w-25 mb-3">
-            <label class="form-label" for="password">Password</label>
-            <input class="form-control" name="password" type="password">
-        </div>
-        <button class="btn btn-primary w-40" type="submit">Sign in</button>
-    </form>
-</div>
-{% endif %}
 
 {% endblock %}
