@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}@{{user.username}} - Connect{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card my-5 w-50 h-100">
+                <img src="{{user.profile['photo']}}" class="object-fit-cover rounded-circle w-50 my-2 mx-auto" style="width: 150px; height: 150px;" alt="Profile image">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{user.profile["fullname"]}}</h5>
+                    <p>@{{user.username}}</p>
+                    <p class="card-text">{{user.profile["description"]}}</p>
+                </div>
+            </div>
+        </div>
+        {% if user.id == current_user.id %}
+            <div class="col-lg-6">
+                <div class="card my-5 h-100">
+                    <div class="card-body">
+                        <form method="POST">
+                            {{ form.csrf_token }}
+                            <div class="mb-3">
+                                {{ form.fullname.label(class="form-label") }}
+                                {{ form.fullname(class="form-control", size=40, value=user.profile["fullname"]) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.description.label(class="form-label") }}
+                                {{ form.description(class="form-control", size=40, value=user.profile["description"] ) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form.skills.label(class="form-label") }}
+                                {{ form.skills(class="form-control", size=4, value=user.profile["skills"]) }}
+                            </div>
+                            <button class="btn btn-primary" type="submit">Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-lg-6">
+                <div class="card my-5 h-100">
+                    <div class="card-body">aaa</div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
