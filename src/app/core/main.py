@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, redirect, url_for
 
 from core import app, db
 from core.auth import load_user, current_user, login_required
@@ -25,6 +25,10 @@ def profile(uuid=None):
     if form.validate_on_submit():
         user.profile["fullname"] = form.fullname.data
         user.profile["description"] = form.description.data
-        user.profile["skills"] = form.skills.data
+        #TODO - write in a more pythonic way
+        tmp = [skill for skill in form.skills.data]
+        skills = []
+        skills.extend(tmp)
+        user.profile["skills"] = skills
         db.session.commit()
     return render_template('profile.html', form=form, user=user)

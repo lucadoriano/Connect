@@ -12,3 +12,27 @@ window.onload = () => {
         });
     }
 }
+//TODO - organize in a different file
+$(document).ready(function () {
+    $('#card-profile-edit').hide();
+    $('#toggleEdit').click(function () {
+        $('#card-profile').toggle();
+        $('#card-profile-edit').toggle();
+
+    });
+
+    $("#submitFormBtn").click(function () {
+        $.ajax({
+            url: $("#profileForm").attr("action"),
+            method: "POST",
+            data: $("#profileForm").serialize(),
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+});
