@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}@{{user.username}} - Connect{% endblock %}
+{% block title %}@{{user.username}} - Connect{% endblock title %}
 
 {% block content %}
 <div class="container">
@@ -48,7 +48,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form method="POST" id="profileForm">
+                                <form method="POST" id="profileForm" onsubmit="test();return false">
                                     {{ form.csrf_token }}
                                     <div class="mb-3">
                                         {{ form.fullname.label(class="form-label") }}
@@ -60,20 +60,25 @@
                                     </div>
                                     <div class="mb-3">
                                         {{ form.skills.label(class="form-label") }}
-
                                         {% if form.skills.errors %}
                                             {{ form.skills(class="form-control is-invalid", size=40, value=user.profile["skills"]) }}
                                             {% for error in form.skills.errors %}
                                                 <small class="invalid-feedback">{{error}}</small>
                                             {% endfor %}
                                         {% else %}
-                                            {{ form.skills(class="form-control", size=40, value=user.profile["skills"]) }}
+                                        
+                                            <div class="input-group">
+                            
+                                                {{ form.skills(class="form-control", size=40) }}
+                                                    {% for skill in user.profile["skills"] %}
+                                                        <span class="edit-skill badge rounded-pill text-bg-primary my-auto mx-1">{{skill.name}}</span>
+                                                    {% endfor %}
+                                            </div>
                                         {% endif %}
                                     </div>
                                     <div class="modal-footer">
                                         <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
-                                        <button class="btn btn-primary" type="button" id="submitFormBtn">Confirm</button>
-                                        <!-- TODO - add a jquery function that refreshes page after click on confirm -->
+                                        <button class="btn btn-primary" type="submit" id="submitFormBtn">Confirm</button>
                                     </div>
                                 </form>
                             </div>
@@ -86,4 +91,8 @@
 </div>
 
 
-{% endblock %}
+{% endblock content %}
+
+{% block extra_scripts %} 
+
+{% endblock extra_scripts %}

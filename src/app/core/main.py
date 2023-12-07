@@ -23,12 +23,13 @@ def profile(uuid=None):
     except:
         return redirect(url_for('home'))
     if form.validate_on_submit():
+        tmp = [x.replace(" ", "") for x in form.skills.data.split(",")]
+        test = [{"name": skill} for skill in tmp]
+        skills = []
+        skills.extend(test)
+        
         user.profile["fullname"] = form.fullname.data
         user.profile["description"] = form.description.data
-        #TODO - write in a more pythonic way
-        tmp = [skill for skill in form.skills.data]
-        skills = []
-        skills.extend(tmp)
         user.profile["skills"] = skills
         db.session.commit()
     return render_template('profile.html', form=form, user=user)

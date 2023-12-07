@@ -45,8 +45,8 @@ class Register(FlaskForm):
 class Profile(FlaskForm):
     fullname = StringField('Fullname')
     description = StringField('Description')
-    skills = JSONField('Skills')
+    skills = StringField('Skills')
 
     def validate_skills(self, field):
-        if len(field.data) > 3:
-            raise ValidationError('Too many skills (max 3)')
+        if len(field.data.split(',')) > 4:
+            raise ValidationError('Too many skills (max 4)')

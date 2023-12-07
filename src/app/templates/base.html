@@ -5,7 +5,7 @@
         <meta name="theme-color" content="white">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         
-        <title>{% block title %}{% endblock %}</title>
+        <title>{% block title %}{% endblock title %}</title>
 
         <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 
@@ -19,15 +19,15 @@
     <body>
         {% block header %}
             {% include 'navbar.html' %}
-        {% endblock %}
+        {% endblock header %}
         
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock content %}
         
         <script src="{{ url_for('static', filename='vendor/jquery/js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static', filename='vendor/popper/js/popper.min.js') }}"></script>
         <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-        {% block scripts %}{% endblock %}
+        
+        {% block extra_scripts %}{% endblock extra_scripts %}
     </body>
 </html>
