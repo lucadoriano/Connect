@@ -1,26 +1,28 @@
-from sqlalchemy import Boolean, Integer, String, JSON
+import uuid
+
+from sqlalchemy import Boolean, UUID, Integer, String, JSON
+from sqlalchemy.ext.mutable import MutableDict
 from flask_login import UserMixin
 from core import db, Base
+from core import settings
 
 
 class User(Base, UserMixin):
     __tablename__ = 'user'
 
-    id = db.Column(Integer, primary_key=True)
+    id = db.Column(UUID, primary_key=True, default=uuid.uuid4)
     email = db.Column(String(120), unique=True)
+    username = db.Column(String(60), nullable=True)
     password = db.Column(String(300), nullable=False)
-    first_name = db.Column(String(30), nullable=True)
-    last_name = db.Column(String(30), nullable=True)
     tutor = db.Column(Boolean, default=False)
-    biography = db.Column(JSON, nullable=True)
+    profile = db.Column(MutableDict.as_mutable(JSON), nullable=True)
 
-    def __init__(self, email, password, first_name=None, last_name=None,
-                 biography=None):
+    def __init__(self, email, password, username,
+                 profile=settings.DEFAULT_PROFILE):
         self.email = email
+        self.username = username
         self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
-        self.biography = biography
+        self.profile = profile
 
     def __repr__(self):
-        return f'<User [{self.id}] - {self.first_name}>'
+        return f'<User [{self.id}] - {self.username}>'

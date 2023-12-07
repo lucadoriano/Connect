@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}@{{user.username}} - Connect{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="col col-md-6 mx-auto">
+        <div class="card my-5 h-100 align-middle">
+            {% if user.id == current_user.id %}
+                <a class="btn btn-outline-dark fa-solid fa-gear m-2" style="width: 50px;" data-bs-toggle="modal" data-bs-target="#card-profile-edit"></a>
+            {% endif %}
+                <img src="{{user.profile['photo']}}" class="object-fit-cover rounded-circle my-2 mx-auto d-block" style="width: 200px; height: 200px;" alt="Profile image">
+            
+            <div class="card-body text-center" id="card-profile">
+                <h5 class="cabrd-title">{{user.profile["fullname"]}}</h5>
+
+                <p>@{{user.username}}</p>
+                <p class="card-text">{{user.profile["description"]}}</p>
+                {% for skill in user.profile["skills"] %}
+                    <span class="badge rounded-pill text-bg-primary">{{skill.name}}</span>
+
+                {% endfor %}
+                <!-- {% if user.profile["social"] %}
+                {% endif %} -->
+                
+                <div class="accordion my-5" id="accordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                About
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+                            <div class="accordion-body">
+                                    <!-- profile bio here -->
+                            </div>
+                        </div>
+                    </div>
+                     
+                </div>
+            </div>
+            {% if user.id == current_user.id %}
+                <div class="modal fade" id="card-profile-edit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit profile: @{{user.username}}</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" id="profileForm" onsubmit="test();return false">
+                                    {{ form.csrf_token }}
+                                    <div class="mb-3">
+                                        {{ form.fullname.label(class="form-label") }}
+                                        {{ form.fullname(class="form-control", size=40, value=user.profile["fullname"]) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form.description.label(class="form-label") }}
+                                        {{ form.description(class="form-control", size=40, value=user.profile["description"] ) }}
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ form.skills.label(class="form-label") }}
+                                        {% if form.skills.errors %}
+                                            {{ form.skills(class="form-control is-invalid", size=40, value=user.profile["skills"]) }}
+                                            {% for error in form.skills.errors %}
+                                                <small class="invalid-feedback">{{error}}</small>
+                                            {% endfor %}
+                                        {% else %}
+                                        
+                                            <div class="input-group">
+                            
+                                                {{ form.skills(class="form-control", size=40) }}
+                                                    {% for skill in user.profile["skills"] %}
+                                                        <span class="edit-skill badge rounded-pill text-bg-primary my-auto mx-1">{{skill.name}}</span>
+                                                    {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                                        <button class="btn btn-primary" type="submit" id="submitFormBtn">Confirm</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block extra_scripts %} 
+
+{% endblock extra_scripts %}

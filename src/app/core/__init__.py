@@ -3,7 +3,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
-from flask_bcrypt import Bcrypt
 
 from core import settings
 
@@ -19,7 +18,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
 migrate = Migrate(app, db, command='migrate')
 
 Base = db.Model
