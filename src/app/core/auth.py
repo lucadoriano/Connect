@@ -1,16 +1,20 @@
 
 from flask import render_template, flash, redirect, url_for
-from flask_login import current_user, login_user, logout_user, login_required
+
+from flask_login import (
+    LoginManager, 
+    current_user,
+    login_user,
+    logout_user,
+    login_required)
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from core import app, login_manager, db
+from core import app
 from core.models import User
 from core.forms import Login, Register
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(user_id)
+login_manager = LoginManager()
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -25,8 +29,7 @@ def register():
                 form.password.data
             )
         )
-        db.session.add(user)
-        db.session.commit()
+        user.save()
         login_user(user)
         return redirect(url_for('home'))
     return render_template('auth.html', form=form)
@@ -39,7 +42,7 @@ def login():
     form = Login()
     if form.validate_on_submit():
         try:
-            user = User.query.filter_by(email=form.email.data).first()
+            user = User.find_by_email(email=form.email.data)
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
                 return redirect(url_for('home'))
@@ -54,3 +57,7 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+@login_manager.user_loader
+def load_user(id):
+    return User.find_by_id(id)

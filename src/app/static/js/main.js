@@ -20,19 +20,4 @@ $(document).ready(function () {
         $('#card-profile-edit').toggle();
 
     });
-
-    $("#submitFormBtn").click(function () {
-        $.ajax({
-            url: $("#profileForm").attr("action"),
-            method: "POST",
-            data: $("#profileForm").serialize(),
-            success: function (response) {
-                console.log(response);
-            },
-            error: function (xhr, status, error) {
-                console.error(xhr.responseText);
-            }
-        });
-    });
-
 });

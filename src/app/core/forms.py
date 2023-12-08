@@ -1,28 +1,9 @@
-import json
-
 from flask_wtf import FlaskForm
-from wtforms import EmailField, PasswordField, StringField
+
+from wtforms import EmailField, PasswordField, StringField, TextAreaField, FileField
 from wtforms.validators import ValidationError, DataRequired, EqualTo, Length
 
 from core.models import User
-
-class JSONField(StringField):
-    def process_formdata(self, valuelist):
-        if valuelist:
-            self.data = json.loads(valuelist[0])
-        else:
-            self.data = None
-
-    def pre_validate(self, form):
-        super().pre_validate(form)
-        if self.data:
-            if not isinstance(self.data, list):
-                raise ValueError('Field must be a list.')
-            for item in self.data:
-                json.dumps(item)
-
-    def _value(self):
-        return json.dumps(self.data) if self.data else ''
     
 class Login(FlaskForm):
     email = EmailField('Email', validators=[DataRequired()])
@@ -43,9 +24,11 @@ class Register(FlaskForm):
             raise ValidationError('User already exist')
 
 class Profile(FlaskForm):
+    image = FileField('Image')
     fullname = StringField('Fullname')
     description = StringField('Description')
     skills = StringField('Skills')
+    about = TextAreaField('About')
 
     def validate_skills(self, field):
         if len(field.data.split(',')) > 4:

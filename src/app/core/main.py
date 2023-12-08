@@ -1,7 +1,11 @@
+import os
+
 from flask import render_template, redirect, url_for
 
-from core import app, db
-from core.auth import load_user, current_user, login_required
+from werkzeug.utils import secure_filename
+
+from core import app
+from core.auth import current_user, login_required, load_user
 from core.models import User
 from core.forms import Profile
 
@@ -19,17 +23,20 @@ def profile(uuid=None):
     if not uuid:
         uuid = current_user.id
     try:
-        user = User.query.filter_by(id=uuid).first()
+        user = User.find_by_id(uuid)
     except:
         return redirect(url_for('home'))
     if form.validate_on_submit():
-        tmp = [x.replace(" ", "") for x in form.skills.data.split(",")]
-        test = [{"name": skill} for skill in tmp]
-        skills = []
-        skills.extend(test)
+        skills = [skill.replace(" ", "") for skill in form.skills.data.split(",")]
+
+        image = form.image.data
+        image_filename = secure_filename(image.filename)
+        image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
         
-        user.profile["fullname"] = form.fullname.data
-        user.profile["description"] = form.description.data
-        user.profile["skills"] = skills
-        db.session.commit()
+        user.profile.image = url_for('static', filename=f'img/profile/{image_filename}')
+        user.profile.fullname = form.fullname.data
+        user.profile.description = form.description.data
+        user.profile.skills = ", ".join(skills)
+        user.profile.about = form.about.data
+        user.save()
     return render_template('profile.html', form=form, user=user)
