@@ -20,12 +20,11 @@
       {% if current_user.is_authenticated %}
         <div class="dropdown-center">
             <a href="#" class="nav-item nav-link dropdown-toggle mx-lg-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <img src="{{current_user.profile['photo']}}" class="object-fit-cover rounded-circle" style="width: 35px; height: 35px;" alt="Profile image">  
+              <img src="{{ current_user.profile.image if current_user.profile.image else url_for('static', filename='img/default-profile-image.png') }}" class="object-fit-cover rounded-circle" style="width: 35px; height: 35px;" alt="Profile image">  
                 @{{current_user.username}}
             </a>
             <ul class="dropdown-menu dropdown-menu-lg-end">
                 <li><a class="dropdown-item" href="/profile">Profile</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
                 <li><a class="dropdown-item" href="/logout">Sign out</a></li>
             </ul>
         </div>

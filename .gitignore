@@ -1,6 +1,7 @@
 __pycache__
 instance
 migrations
+**/img/profile/
 
 .venv
 .env

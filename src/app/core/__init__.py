@@ -1,30 +1,29 @@
 from flask import Flask
 
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_login import LoginManager
-
+from core.models import db, migrate
 from core import settings
 
-app = Flask(__name__, 
-            static_folder=settings.STATIC_FOLDER,
-            template_folder=settings.TEMPLATE_FOLDER)
-            
-app.config["SQLALCHEMY_DATABASE_URI"] = settings.POSTGRES_URI
+app = Flask(
+    __name__, 
+    static_folder=settings.STATIC_FOLDER,
+    template_folder=settings.TEMPLATE_FOLDER
+)
+app.secret_key = settings.SECRET_KEY
+app.config["SQLALCHEMY_DATABASE_URI"] = settings.DATABASE
 app.config["TEMPLATES_AUTO_RELOAD"] = settings.DEBUG
-app.secret_key = 'secret-key' #change in production
-
-login_manager = LoginManager()
-login_manager.init_app(app)
-
-db = SQLAlchemy(app)
-migrate = Migrate(app, db, command='migrate')
-
-Base = db.Model
+app.config["UPLOAD_FOLDER"] = settings.UPLOAD_FOLDER
 
 def init_db():
-    from core.models import User
+    db.init_app(app)
+    migrate.init_app(app, db, command='migrate')
+
+    from core.models import User, Profile
     db.create_all()
 
+def init_auth():
+    from core.auth import login_manager
+    login_manager.init_app(app)
+    
 with app.app_context():
     init_db()
+    init_auth()
