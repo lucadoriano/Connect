@@ -30,10 +30,15 @@ def profile(uuid=None):
         skills = [skill.replace(" ", "") for skill in form.skills.data.split(",")]
 
         image = form.image.data
-        image_filename = secure_filename(image.filename)
-        image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
-        
-        user.profile.image = url_for('static', filename=f'img/profile/{image_filename}')
+        _image_filename, image_file_type = os.path.splitext(image.filename)
+
+        rename_image = secure_filename(f'{str(user.profile.id)}{image_file_type}')
+        for file in os.listdir(app.config['UPLOAD_FOLDER']):
+            if file.startswith(str(user.profile.id)):
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], file))
+        image.save(os.path.join(app.config['UPLOAD_FOLDER'], rename_image))
+
+        user.profile.image = url_for('static', filename=f'img/profile/{rename_image}')
         user.profile.fullname = form.fullname.data
         user.profile.description = form.description.data
         user.profile.skills = ", ".join(skills)
