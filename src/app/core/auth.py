@@ -15,6 +15,8 @@ from core.models import User
 from core.forms import Login, Register
 
 login_manager = LoginManager()
+login_manager.login_view = 'login'
+
 
 @app.route('/register', methods=["GET", "POST"])
 def register():

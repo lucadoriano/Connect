@@ -9,11 +9,12 @@ from core.auth import current_user, login_required, load_user
 from core.models import User
 from core.forms import Profile
 
+
 @app.route('/')
+@login_required
 def home():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
     return render_template('home.html')
+
 
 @app.route('/profile', methods=["GET", "POST"])
 @app.route('/profile/<uuid>')
@@ -45,3 +46,15 @@ def profile(uuid=None):
         user.profile.about = form.about.data
         user.save()
     return render_template('profile.html', form=form, user=user)
+
+
+@app.route('/tutors')
+@login_required
+def tutors():
+    return render_template('home.html')
+
+
+@app.route('/notes')
+@login_required
+def notes():
+    return render_template('home.html')

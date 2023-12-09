@@ -1,60 +1,71 @@
 {% extends "base.html" %}
-{% block header %}{% endblock header %}
+{% block header %}
+{% endblock header %}
 {% block content %}
 
-<div class="d-flex flex-column justify-content-center align-items-center">
-    {% if request.path == '/register' %}
-        <form method="POST">
-            {{ form.csrf_token }}
-            <div class="mb-3">
-                {{ form.email.label(class="form-label") }}
-                {{ form.email(class="form-control", size=40) }}
-            </div>
-            <div class="mb-3">
-                {{ form.username.label(class="form-label") }}
-                {{ form.username(class="form-control", size=40) }}
-            </div>
-            <div class="mb-3">
-                {{ form.password.label(class="form-label") }}
-                {{ form.password(class="form-control", size=40) }}
-            </div>
-            <div class="mb-3">
-                {{ form.confirm_password.label(class="form-label") }}
-
-                {% if form.password.errors %}
-                    {{ form.confirm_password(class="form-control is-invalid", size=40) }}
-                        {% for error in form.password.errors %}
-                            <small class="invalid-feedback">{{error}}</small>
-                        {% endfor %}
-                {% else %}
-                    {{ form.confirm_password(class="form-control", size=40) }}
-                {% endif %}
-            </div>
-            <button class="btn btn-primary w-40" type="submit">Sign in</button>
-        </form>
-    {% else %}
-        <form method="POST">
-            {{ form.csrf_token }}
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-danger" role="alert">
-                            {{message}}
+<div class="container d-flex align-items-center justify-content-center vh-100">
+    <div class="col col-md-4 mx-auto">
+        <img class="d-block mx-auto" src="{{ url_for('static', filename='img/logo.png') }}" style="width: 226.5px; height: 39.9px;"> 
+        <div class="my-5">
+            <div class="">
+                {% if request.path == '/register' %}
+                    <h2>Register</h2>
+                    <form method="POST">
+                        {{ form.csrf_token }}
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control font-awesome", size=40, placeholder="  example@gmail.com") }}
                         </div>
-                    {% endfor %}    
-                {% endif %}
-            {% endwith %}    
-            <div class="mb-3">
-                {{ form.email.label(class="form-label") }}
-                {{ form.email(class="form-control", size=40) }}
-            </div>
-            <div class="mb-3">
-                {{ form.password.label(class="form-label") }}
-                {{ form.password(class="form-control", size=40) }}
-            </div>
-            <button class="btn btn-primary w-40" type="submit">Sign in</button>
-        </form>
-    {% endif %}
-</div>
+                        <div class="mb-3">
+                            {{ form.username.label(class="form-label") }}
+                            {{ form.username(class="form-control font-awesome", size=40, placeholder="  Enter your username") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control font-awesome", size=40, placeholder="  Enter your password") }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.confirm_password.label(class="form-label") }}
 
+                            {% if form.password.errors %}
+                                {{ form.confirm_password(class="form-control is-invalid", size=40) }}
+                                    {% for error in form.password.errors %}
+                                        <small class="invalid-feedback">{{error}}</small>
+                                    {% endfor %}
+                            {% else %}
+                                {{ form.confirm_password(class="form-control font-awesome", size=40, placeholder="  Confirm your password") }}
+                            {% endif %}
+                        </div>
+                        <button class="btn btn-primary w-50 d-block mx-auto" type="submit">Submit</button>
+                        <h6 class="text-center my-5">Already have an account? <a href="{{ url_for('login') }}">Login</a></h6>
+                    </form>
+                {% else %}
+                    <h2>Login</h2>
+                    <form method="POST">
+                        {{ form.csrf_token }}
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-danger" role="alert">
+                                        {{message}}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control font-awesome", size=40, placeholder='  Enter your email') }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control font-awesome", size=40, placeholder='  Enter your password') }}
+                        </div>
+                        <button class="btn btn-primary w-50 d-block mx-auto" type="submit">Sign in</button>
+                        <h6 class="text-center my-5">Don't have an account? <a href="{{ url_for('register') }}">Create one</a></h6>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>    
 {% endblock content %}

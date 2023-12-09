@@ -13,10 +13,11 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='vendor/fontawesome/css/fontawesome.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='vendor/fontawesome/css/brands.min.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='vendor/fontawesome/css/solid.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
       </head>
     </head>
     
-    <body>
+    <body class="bg-light bg-gradients">
         {% block header %}
             {% include 'navbar.html' %}
         {% endblock header %}
