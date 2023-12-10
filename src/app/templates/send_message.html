@@ -1,0 +1,35 @@
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Send a message</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {{ form.csrf_token }}
+                    <div class="mb-3">
+                        {{ form.recipient.label(class="form-label") }}
+
+                        {% if form.recipient.errors %}
+                            {{ form.recipient(class="form-control is-invalid font-awesome", id='recipient', size=40, placeholder='@ Enter username') }}
+                                {% for error in form.recipient.errors %}
+                                    <small class="invalid-feedback">{{error}}</small>
+                                {% endfor %}
+                        {% else %}
+                            {{ form.recipient(class="form-control font-awesome", id='recipient', size=40, placeholder='@ Enter username') }}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.body.label(class="form-label") }}
+                        {{ form.body(class="form-control font-awesome", size=40, placeholder=' Enter your message') }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Send</button>
+                </form> 
+            </div>
+        </div>
+    </div>
+</div>
