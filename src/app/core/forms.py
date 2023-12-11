@@ -4,6 +4,7 @@ from wtforms import EmailField, PasswordField, StringField, TextAreaField, FileF
 from wtforms.validators import ValidationError, DataRequired, EqualTo, Length
 
 from core.models import User
+from core.auth import current_user
     
 class Login(FlaskForm):
     email = EmailField('Email', validators=[DataRequired()])
@@ -33,3 +34,11 @@ class Profile(FlaskForm):
     def validate_skills(self, field):
         if len(field.data.split(',')) > 4:
             raise ValidationError('Too many skills (max 4)')
+
+class MessageForm(FlaskForm):
+    recipient = StringField('Recipient')
+    body = TextAreaField('Message')
+
+    def validate_recipient(self, field):
+        if field.data == current_user.username:
+            raise ValidationError('Cannot send a message to yourself.')

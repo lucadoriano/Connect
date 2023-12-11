@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Messages - Connect{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card my-5 h-100">
+                <div class="card-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <!-- Tab Received -->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="received-tab" data-bs-toggle="tab" data-bs-target="#received-tab-panel" type="button" role="tab" aria-controls="received-tab-panel" aria-selected="true">Received</button>
+                        </li>
+
+                        <!-- Tab Sent -->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="sent-tab" data-bs-toggle="tab" data-bs-target="#sent-tab-panel" type="button" role="tab" aria-controls="sent-tab-panel" aria-selected="false">Sent</button>
+                        </li>
+                        <button type="button" class="btn btn-primary d-block font-awesome mx-auto ms-auto mb-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                             New message
+                        </button>
+                    </ul>
+
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="received-tab-panel" role="tabpanel" aria-labelledby="received-tab" tabindex="0">
+                            <!-- Received messages list -->
+                            <ul class="list-group list-group-flush overflow-auto my-2" style="max-height: 400px;" id="receivedMessageList">
+                                {% for message in user.profile.messages_received|sort(attribute='timestamp', reverse=true) %}
+                                    <li class="list-group-item" data-timestamp="{{message.timestamp.strftime('%d/%m/%y %H:%M')}}" data-sender="{{message.sender_profile.fullname}}" data-messages="{{message.body}}" data-label="From">
+                                        <!-- Displays the recipient's fullname to click (on the left) -->
+                                        <h5>{{message.sender_profile.fullname}}</h5>
+                                        <h6 class="text-muted">{{message.timestamp.strftime('%d/%m/%y %H:%M')}}</h6>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <div class="tab-pane fade" id="sent-tab-panel" role="tabpanel" aria-labelledby="sent-tab" tabindex="0">
+                            <!-- Received sent list -->
+                            <ul class="list-group list-group-flush overflow-auto my-2" style="max-height: 400px;" id="sentMessageList">
+                                {% for message in user.profile.messages_sent|sort(attribute='timestamp', reverse=true) %}
+                                    <li class="list-group-item" data-timestamp="{{message.timestamp.strftime('%d/%m/%y %H:%M')}}" data-sender="{{message.recipient_profile.fullname}}" data-messages="{{message.body}}" data-label="To">
+                                        <h5>{{message.recipient_profile.fullname}}</h5>
+                                        <h6 class="text-muted">{{message.timestamp.strftime('%d/%m/%y %H:%M')}}</h6>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card my-5 h-100">
+                <div class="card-body d-flex align-items-center justify-content-center" id="selected-card-body">
+                    <div class="card-text" id="selectedMessageContent">Select a message</div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Modal (send message) -->
+    {% include 'send_message.html' %}
+    <!-- Modal -->
+
+</div>
+
+{% endblock content %} 
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/inbox.js') }}"></script>
+{% endblock extra_scripts %}

@@ -25,6 +25,9 @@
                     <span class="badge rounded-pill text-bg-primary">{{skill}}</span> 
                 {% endfor %}
                 
+                {% if not user.id == current_user.id %}
+                    <a type="button" class="btn btn-primary d-block w-25 font-awesome mx-auto my-4" href="{{ url_for('inbox', profile=user.username) }}"> Contact me</a>
+                {% endif %}
                 <!-- {% if user.profile["social"] %}
                 {% endif %} -->
                 
