@@ -75,3 +75,7 @@ def inbox(profile=None):
             )
             new_message.save()
     return render_template('inbox.html', form=form, user=current_user)
+
+@app.route('/test/<room>')
+def host(room):
+    return render_template('test.html', room=room, user=current_user)
