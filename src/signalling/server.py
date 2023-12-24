@@ -1,7 +1,7 @@
 import socket
 import json
 
-from websocket import WebSocket
+from websocket.websocket import WebSocket
 
 
 
@@ -16,6 +16,12 @@ def send_to_host(roomid, message):
         host = rooms[roomid][0]
         if host in clients:
             ws.send(clients[host], message)
+
+def send_to_room(roomid, message):
+    if rooms[roomid]:
+        for user in rooms[roomid]:
+            ws.send(get_user_client(user), message)
+
 
 def get_user_client(user):
     for username, client in clients.items():
@@ -73,27 +79,20 @@ def onmessage(client: socket.socket, message: str):
                 rooms[room_id].append(username)
                 clients[username] = client
                 ws.send(client, f"{username} joined room {room_id}")
+                if len(rooms[room_id]) == MAX_USERS:
+                    send_to_room(room_id, json.dumps({"type": "ready", "callee": f"{username}", "status": "All users have joined"}))
+
             else:
                 ws.send(client, "User already in room")
 
         
         if type == "list_rooms":
             ws.send(client, str(rooms))
-
+        
             
         if type == "clients":
             ws.send(client, str(clients))
             print(get_client_username(client))
-        
-        if type == "starter":
-            room_id = params["room_id"]
-            message = params["message"]
-            send_to_host(room_id, message)
-
-        if type == "test":
-            username = params["username"]
-            message = params["message"]
-            send_to_user(username, message)
         
         if type == "offer":
             sender = params["sender"]

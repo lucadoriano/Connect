@@ -126,3 +126,27 @@ class Message(db.Model):
             db.session.rollback()
             db.session.close()
             raise e
+
+
+class Room(db.Model):
+    id = db.Column(UUID, primary_key=True, default=uuid.uuid4)
+    caller = db.Column(String(60), nullable=False)
+    callee = db.Column(String(60), nullable=False)
+
+    def __init__(self, caller, callee):
+        self.caller = caller
+        self.callee = callee
+        
+    @classmethod
+    def find_by_id(cls, id: uuid):
+        return cls.query.filter_by(id=id).first()
+
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+
+        except Exception as e:
+            db.session.rollback()
+            db.session.close()
+            raise e

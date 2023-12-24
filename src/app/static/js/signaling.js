@@ -6,9 +6,20 @@ socket.onopen = function(e) {
 
 socket.onmessage = function(event) {
   console.log(`[server] ${event.data}`);
+  const connection = $("#connection-info").data()
   const data = JSON.parse(event.data);
-
-  if (data.type === 'offer') {
+  if (data.type === 'handshake') {
+    console.log("curr user: " + connection.current_user)
+    console.log("caller: " + connection.caller)
+    console.log("callee: " + connection.callee)
+    join(username=connection.current_user, room_id=connection.room)
+    
+  }
+  else if (data.type === 'ready') {
+    $('#callModalStatus').html("Waiting for peer to connect: CONNECTED!")
+    $('#callButton').removeClass("disabled")
+  }
+  else if (data.type === 'offer') {
     handleOffer(data);
   } else if (data.type === 'answer') {
     console.log("i received an answer")
@@ -63,4 +74,3 @@ function join(username, room) {
     }
   });
 }
-

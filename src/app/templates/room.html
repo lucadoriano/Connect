@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if not room %}
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Create a room to start a call</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {{ form.csrf_token }}
+                        <div class="mb-3">
+                            {{ form.callee.label(class="form-label") }}
+
+                            {% if form.callee.errors %}
+                                {{ form.callee(class="form-control is-invalid font-awesome", size=40, placeholder='@ Enter username') }}
+                                    {% for error in form.recipient.errors %}
+                                        <small class="invalid-feedback">{{error}}</small>
+                                    {% endfor %}
+                            {% else %}
+                                {{ form.callee(class="form-control font-awesome", size=40, placeholder='@ Enter username') }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit">Create</button>
+                    </form> 
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+{% if current_user.username == room.caller %}
+    <div class="modal fade" id="startCall" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="startCallLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="startCallLabel">Start the call</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="callModalStatus">
+                        Waiting for peer to connect: CONNECTING...
+                </div>  
+                <div class="modal-footer">
+                    <button class="btn btn-primary disabled" type="button" id='callButton' onclick="createOffer()" data-bs-dismiss="modal">Call</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+    <!-- <video id="localVideo"></video>
+    <video id="remoteVideo"></video> -->
+    <div id="videoContainer"></div>
+    <p id="stat"></p>
+    <p id="connection-info" data-current_user="{{current_user.username}}" data-room="{{room.id}}" data-caller="{{room.caller}}" data-callee="{{room.callee}}"></p>
+
+    <button id="button" onclick="get_rooms()">rooms</button>  <!-- testing purposes -->
+    <button id="button" onclick="clients()">clients</button>  <!-- testing purposes -->
+
+
+    <br> Chat: <input id="chat"><br>
+    <pre id="output">Chat: </pre>
+    <button id="hangup-button" onclick="closea();">close</button>
+{% endif %}
+{% endblock content %}
+
+{% block extra_scripts %}
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="{{ url_for('static', filename='js/webrtc.js') }}"></script>
+<script src="{{ url_for('static', filename='js/signaling.js') }}"></script>
+
+{% if not room %}
+    <script>
+        $(document).ready(function() {
+            $('#staticBackdrop').modal('show');
+        });
+    </script>
+{% endif %}
+
+<script>
+    $(document).ready(function() {
+        $('#startCall').modal('show');
+    });
+</script>
+
+{% endblock extra_scripts %}

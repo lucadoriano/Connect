@@ -1,4 +1,5 @@
 const output = document.getElementById('output');
+
 const config = {
   iceServers: [{
     urls: "stun:stun.l.google.com:19302" // list of free STUN servers: https://gist.github.com/zziuni/3741933
@@ -8,7 +9,8 @@ const config = {
 const mediaConstraints = {
     video: true,
     audio: true
-  }
+}
+
 const peer = new RTCPeerConnection(config);
 const dc = peer.createDataChannel("chat", {
   negotiated: true,
@@ -50,8 +52,8 @@ chat.onkeypress = function(e) {
   chat.value = "";
 };
 
-async function createOffer(username) {
-  const target = $("#name").val();
+async function createOffer() {
+  const connection = $("#connection-info").data()
   await peer.setLocalDescription(peer.createOffer());
   peer.onicecandidate = ({
     candidate
@@ -61,32 +63,38 @@ async function createOffer(username) {
     sendToServer({
       "type": "offer",
       "params": {
-        "sender": username,
-        "target": target,
+        "sender": connection.caller,
+        "target": connection.callee,
         "sdp": JSON.stringify(offer)
       }
     })
-    console.log(`${username} has sent the offer to ${target}`)
   };
 }
 
 async function handleOffer(data) {
   if (peer.signalingState != "stable") return;
-  const target = $("#name").val();
+  const connection = $("#connection-info").data()
   console.log(`you received the offer`)
 
   await peer.setRemoteDescription({
     type: "offer",
     sdp: JSON.parse(data["sdp"])
   });
+  
   await peer.setLocalDescription(await peer.createAnswer());
   peer.onicecandidate = ({
     candidate
   }) => {
     if (candidate) return;
     const answer = peer.localDescription.sdp;
-    console.log(`sending answer to ${target}`)
-    sendToServer({ "type": 'answer', "params": {"sender": "", "target": target, "sdp": JSON.stringify(answer) }});
+    sendToServer({
+      "type": "answer", 
+      "params": {
+        "sender": connection.callee,
+        "target": connection.caller, 
+        "sdp": JSON.stringify(answer) 
+      }
+    });
     console.log(answer)
   };
 };

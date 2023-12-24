@@ -1,6 +1,7 @@
 import socket
 import struct
 import threading
+import json
 
 from hashlib import sha1
 from base64 import b64encode
@@ -96,7 +97,10 @@ class WebSocket(object):
             else:
                 self._handshake(data, client)
                 self.clients.add(client)
-                self.send(client, message="Handshake complete")
+                self.send(client, message=json.dumps({
+                  "type": "handshake",
+                  "status": "complete"
+                }))
 
             
 
