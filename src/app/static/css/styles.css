@@ -15,3 +15,12 @@
         "Noto Color Emoji",
         "Font Awesome 6 Free";
 }
+.stream-btn {
+    width: 50px;
+    height: 50px;
+}
+
+.stream-btn:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}

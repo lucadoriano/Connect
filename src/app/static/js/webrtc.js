@@ -1,8 +1,12 @@
 const output = document.getElementById('output');
+const toggleCamera = document.getElementById('camera-btn');
+const toggleMic = document.getElementById('mic-btn');
+
+let localStream;
 
 const config = {
   iceServers: [{
-    urls: "stun:stun.l.google.com:19302" // list of free STUN servers: https://gist.github.com/zziuni/3741933
+    urls: "stun:stun.l.google.com:19302"
   }]
 };
 
@@ -19,25 +23,18 @@ const dc = peer.createDataChannel("chat", {
 
 navigator.mediaDevices.getUserMedia(mediaConstraints)
   .then(stream => {
-    const localVideo = document.createElement('video');
+    localStream = stream
+    const localVideo = document.getElementById('localVideo');
     localVideo.srcObject = stream;
-    localVideo.autoplay = true;
     localVideo.muted = true;
-    videoContainer.appendChild(localVideo);
 
     stream.getTracks().forEach(track => peer.addTrack(track, stream));
   })
   .catch(err => console.error('Error accessing camera and/or microphone:', err));
 
 peer.ontrack = (event) => {
-  const remoteVideo = document.getElementById('remoteVideo');
-  if (!remoteVideo) {
-    const newRemoteVideo = document.createElement('video');
-    newRemoteVideo.id = 'remoteVideo';
-    newRemoteVideo.srcObject = event.streams[0];
-    newRemoteVideo.autoplay = true;
-    videoContainer.appendChild(newRemoteVideo);
-  }
+    const remoteVideo = document.getElementById('remoteVideo');
+    remoteVideo.srcObject = event.streams[0];
 };
 
 const log = msg => output.innerHTML += `<br>${msg}`;
@@ -117,3 +114,29 @@ function handleChange() {
     'color:black', 'color:red', 'color:black', 'color:red');
 }
 handleChange();
+
+toggleCamera.addEventListener('click', () => {
+  const videoTrack = localStream.getTracks().find(track => track.kind === 'video');
+  if (videoTrack.enabled) {
+      videoTrack.enabled = false;
+      $('#camera-btn').removeClass('btn-secondary')
+      $('#camera-btn').addClass('btn-danger')
+  } else {
+      videoTrack.enabled = true;
+      $('#camera-btn').removeClass('btn-danger')
+      $('#camera-btn').addClass('btn-secondary')
+    }
+  });
+
+toggleMic.addEventListener('click', () => {
+  const audioTrack = localStream.getTracks().find(track => track.kind === 'audio');
+  if (audioTrack.enabled) {
+      audioTrack.enabled = false;
+      $('#mic-btn').removeClass('btn-secondary')
+      $('#mic-btn').addClass('btn-danger')
+  } else {
+    audioTrack.enabled = true;
+      $('#mic-btn').removeClass('btn-danger')
+      $('#mic-btn').addClass('btn-secondary')
+    }
+  });

@@ -52,19 +52,59 @@
         </div>
     </div>
 {% endif %}
-    <!-- <video id="localVideo"></video>
-    <video id="remoteVideo"></video> -->
-    <div id="videoContainer"></div>
+    <div class="container">
+    <div class="card my-5 h-100 align-middle">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col">
+                    <div class="ratio ratio-16x9" style="background-color: black;">
+                        <video id="remoteVideo" playsinline autoplay class="border border-dark object-fit-cover"></video>
+                    </div>
+                    <div class="col">
+                        <div class="ratio ratio-16x9" style="background-color: black;">
+                            <video id="localVideo" playsinline autoplay class="border border-dark object-fit-cover"></video>
+                        </div>
+                    </div>
+                </div>
+                    
+                <div id="stream-controls" class="text-center m-2">
+                    <button id="leave-btn" class="btn btn-secondary rounded-circle stream-btn" onclick="hangup()">
+                        <i class="fa-solid fa-phone-slash"></i>
+                    </button>
+                    <button id="mic-btn" class="btn btn-secondary rounded-circle stream-btn">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                    <button id="camera-btn" class="btn btn-secondary rounded-circle stream-btn">
+                        <i class="fa-solid fa-video"></i>
+                    </button>
+                    <button id="share-btn" class="btn btn-secondary rounded-circle stream-btn">
+                        <i class="fa-solid fa-display"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card my-5">
+                    <div class="chat-container">
+                        <pre id="output">Chat: </pre>
+                        <div class="chat-bubble">
+                            <!-- Chat Bubbles Go Here -->
+                        </div>
+                        <input id="chat" placeholder="Type your message...">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+    
     <p id="stat"></p>
     <p id="connection-info" data-current_user="{{current_user.username}}" data-room="{{room.id}}" data-caller="{{room.caller}}" data-callee="{{room.callee}}"></p>
 
     <button id="button" onclick="get_rooms()">rooms</button>  <!-- testing purposes -->
     <button id="button" onclick="clients()">clients</button>  <!-- testing purposes -->
-
-
-    <br> Chat: <input id="chat"><br>
-    <pre id="output">Chat: </pre>
-    <button id="hangup-button" onclick="closea();">close</button>
 {% endif %}
 {% endblock content %}
 
