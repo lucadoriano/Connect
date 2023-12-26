@@ -61,7 +61,7 @@ function clients() {
   }));
 }
 
-function closea() {
+function hangup() {
   socket.close()
 }
 
