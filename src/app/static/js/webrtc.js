@@ -1,8 +1,11 @@
 const output = document.getElementById('output');
 const toggleCamera = document.getElementById('camera-btn');
 const toggleMic = document.getElementById('mic-btn');
+const toggleShare = document.getElementById('share-btn');
+const connection = document.getElementById('connection-info').dataset
 
 let localStream;
+let screenSharing = false;
 
 const config = {
   iceServers: [{
@@ -14,6 +17,14 @@ const mediaConstraints = {
     video: true,
     audio: true
 }
+
+const screenMediaConstraints = {
+  video: {
+    cursor: true
+  },
+  systemAudio: "exclude",
+};
+
 
 const peer = new RTCPeerConnection(config);
 const dc = peer.createDataChannel("chat", {
@@ -37,20 +48,25 @@ peer.ontrack = (event) => {
     remoteVideo.srcObject = event.streams[0];
 };
 
-const log = msg => output.innerHTML += `<br>${msg}`;
+const log = (msg, isSent) => {
+  const messageClass = isSent ? 'msg-container right' : 'msg-container left';
+  output.innerHTML += `<div class="${messageClass}"><div class="msg">${msg}</div></div>`;
+};
+
 dc.onopen = () => chat.select();
-dc.onmessage = e => log(`> ${e.data}`);
-peer.oniceconnectionstatechange = e => log(peer.iceConnectionState);
+dc.onmessage = e => log(e.data, false); // Received message
+peer.oniceconnectionstatechange = e => log(peer.iceConnectionState, true); // Sent message
 
 chat.onkeypress = function(e) {
   if (e.keyCode != 13) return;
-  dc.send(chat.value);
-  log(chat.value);
+  const message = chat.value;
+  dc.send(message);
+  log(message, true); // Sent message
   chat.value = "";
 };
 
+
 async function createOffer() {
-  const connection = $("#connection-info").data()
   await peer.setLocalDescription(peer.createOffer());
   peer.onicecandidate = ({
     candidate
@@ -70,7 +86,6 @@ async function createOffer() {
 
 async function handleOffer(data) {
   if (peer.signalingState != "stable") return;
-  const connection = $("#connection-info").data()
   console.log(`you received the offer`)
 
   await peer.setRemoteDescription({
@@ -139,4 +154,41 @@ toggleMic.addEventListener('click', () => {
       $('#mic-btn').removeClass('btn-danger')
       $('#mic-btn').addClass('btn-secondary')
     }
-  });
+});
+
+
+async function shareScreen(){
+  try {
+    await navigator.mediaDevices.getDisplayMedia(screenMediaConstraints)
+    .then(stream => {
+      if (!screenSharing) {
+        let videoTrack = stream.getVideoTracks()[0];
+        let videoSender = peer.getSenders().find(sender => sender.track.kind === videoTrack.kind);
+        const localVideo = document.getElementById('localVideo');
+        localVideo.srcObject = stream;
+        screenSharing = true;
+        $('#share-btn').removeClass('btn-secondary')
+        $('#share-btn').addClass('btn-danger')
+
+        videoSender.replaceTrack(videoTrack);
+
+        videoTrack.onended = function(){
+          videoSender.replaceTrack(localStream.getTracks()[1]);
+          localVideo.srcObject = localStream;
+          screenSharing = false;
+          $('#share-btn').removeClass('btn-danger')
+          $('#share-btn').addClass('btn-secondary')
+        }
+      }
+    });
+  } catch (err) {
+    console.error('Error:', err);
+  }
+}
+
+
+toggleShare.addEventListener('click', (event) => {
+  if (!screenSharing) {
+    shareScreen();
+  }
+});
