@@ -1,3 +1,17 @@
+"""
+
+This WebSocket server is part of my Computer Networks (Reti di Calcolatori) project.
+It is implemented using low-level networking and it provides a basic WebSocket
+server that follows the most important features of RFC 6455 - The WebSocket Protocol. 
+
+The server is designed to handle WebSocket handshakes, manage client connections,
+and facilitate bidirectional communication between clients and the server.
+
+Authored: Luca D'Oriano
+Project: Reti di Calcolatori
+University of Naples Parthenope
+
+"""
 import socket
 import struct
 import threading
@@ -45,7 +59,6 @@ class WebSocket(object):
 
       except KeyboardInterrupt:
          [client.close() for client in self.clients]
-         # [threading._Thread__stop() for thread in self.threads]
          sock.close()
 
    def _generate_accept_key(self, key: str):

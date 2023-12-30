@@ -16,8 +16,8 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/profile', methods=["GET", "POST"])
-@app.route('/profile/<string:username>')
+@app.route('/profile/', methods=["GET", "POST"])
+@app.route('/profile/<string:username>/')
 @login_required
 def profile(username=None):
     form = Profile()
@@ -53,19 +53,19 @@ def profile(username=None):
     return render_template('profile.html', form=form, user=user)
 
 
-@app.route('/tutors')
+@app.route('/tutors/')
 @login_required
 def tutors():
     return render_template('home.html')
 
 
-@app.route('/notes')
+@app.route('/notes/')
 @login_required
 def notes():
     return render_template('home.html')
 
-@app.route('/inbox', methods=["GET", "POST"])
-@app.route('/inbox/<string:profile>', methods=["GET", "POST"])
+@app.route('/inbox/', methods=["GET", "POST"])
+@app.route('/inbox/<string:profile>/', methods=["GET", "POST"])
 @login_required
 def inbox(profile=None):
     form = MessageForm()
@@ -81,8 +81,9 @@ def inbox(profile=None):
             return redirect('inbox')
     return render_template('inbox.html', form=form, user=current_user)
 
-@app.route('/room', methods=["GET", "POST"])
-@app.route('/room/<uuid:uuid>', methods=["GET", "POST"])
+
+@app.route('/room/', methods=["GET", "POST"])
+@app.route('/room/<uuid:uuid>/', methods=["GET", "POST"])
 @login_required
 def room(uuid=None):
     form = RoomForm()

@@ -44,7 +44,7 @@
 }
 
 .msg{
-  max-width: 50%;
+  width: fit-content;
   border-radius: 15px;
   padding-top: 5px;
   padding-bottom: 5px;

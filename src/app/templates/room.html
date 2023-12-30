@@ -39,11 +39,11 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="startCallLabel">Start the call</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h1 class="modal-title fs-5" id="startCallLabel">Room - waiting for student to join</h1>
                 </div>
                 <div class="modal-body" id="callModalStatus">
-                        Waiting for peer to connect: CONNECTING...
+                    Share this room address with the student. Once they connect, you'll be able to start the call.
+                    <p class="my-2" style="font-size: 12px;"><small>If you're facing troubles during connection, try refreshing the page and advise the student to do the same.</small></p>
                 </div>  
                 <div class="modal-footer">
                     <button class="btn btn-primary disabled" type="button" id='callButton' onclick="createOffer()" data-bs-dismiss="modal">Call</button>
@@ -67,7 +67,7 @@
                 </div>
                     
                 <div id="stream-controls" class="text-center m-2">
-                    <button id="leave-btn" class="btn btn-secondary rounded-circle stream-btn" onclick="hangup()">
+                    <button id="leave-btn" class="btn btn-secondary rounded-circle stream-btn" onclick="hangupCall()">
                         <i class="fa-solid fa-phone-slash"></i>
                     </button>
                     <button id="mic-btn" class="btn btn-secondary rounded-circle stream-btn">
@@ -84,7 +84,7 @@
                     <div class="my-5 border-top">
                         <div class="m-2">
                             <div class="p-3 mb-2 bg-secondary-subtle text-emphasis-secondary"><i class="fa-solid fa-comment-dots"></i> Chat:</div>
-                            <pre id="output"></pre>
+                            <pre id="chatOutput"></pre>
                             <input id="chat" type="text" class="form-control my-5" placeholder="Type your message...">
                         </div>
                     </div>
@@ -93,13 +93,8 @@
         </div>
     </div>
 
-    
-    <p id="stat"></p>
     <p id="connection-info" data-current_user="{{current_user.username}}" data-room="{{room.id}}" data-caller="{{room.caller}}" data-callee="{{room.callee}}"></p>
 
-    <button id="button" onclick="get_rooms()">rooms</button>  <!-- testing purposes -->
-    <button id="button" onclick="clients()">clients</button>  <!-- testing purposes -->
-    <button id="button" onclick="test()">test</button>  <!-- testing purposes -->
 {% endif %}
 {% endblock content %}
 
