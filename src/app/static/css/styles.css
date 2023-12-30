@@ -15,3 +15,39 @@
         "Noto Color Emoji",
         "Font Awesome 6 Free";
 }
+.stream-btn {
+    width: 50px;
+    height: 50px;
+}
+
+.msg-container{
+  width: 100%;
+  display: flex;
+  margin-top: 5px;
+}
+
+.msg-container.right{
+  justify-content: flex-end
+}
+
+.msg-container.left{
+  justify-content: flex-start
+}
+
+.msg-container.right > .msg{
+    background-color:#CCC;
+}
+
+.msg-container.left > .msg{
+  background-color:#555;
+  color: white;
+}
+
+.msg{
+  width: fit-content;
+  border-radius: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+}

@@ -18,7 +18,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 
 
-@app.route('/register', methods=["GET", "POST"])
+@app.route('/register/', methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -37,7 +37,7 @@ def register():
     return render_template('auth.html', form=form)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
@@ -54,7 +54,7 @@ def login():
             print(f'ERROR: {e}')
     return render_template('auth.html', form=form)
 
-@app.route('/logout')
+@app.route('/logout/')
 @login_required
 def logout():
     logout_user()

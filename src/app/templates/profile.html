@@ -30,24 +30,22 @@
                 {% endif %}
                 <!-- {% if user.profile["social"] %}
                 {% endif %} -->
-                
-                <div class="accordion my-5" id="accordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                About
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordion">
-                            <div class="accordion-body">
-                                {% if user.profile.about %}
-                                    {{user.profile.about}}
-                                {% endif %}
+                {% if user.profile.about %}
+                    <div class="accordion my-5" id="accordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    About
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordion">
+                                <div class="accordion-body">
+                                        {{user.profile.about}}
+                                </div>
                             </div>
                         </div>
                     </div>
-                     
-                </div>
+                {% endif %}
             </div>
             {% if user.id == current_user.id %}
                 <div class="modal fade" id="card-profile-edit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

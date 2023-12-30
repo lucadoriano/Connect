@@ -21,7 +21,7 @@ class Register(FlaskForm):
     confirm_password = PasswordField('Confirm password', validators=[DataRequired()])
 
     def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
+        if User.find_by_email(email=field.data):
             raise ValidationError('User already exist')
 
 class Profile(FlaskForm):
@@ -36,9 +36,18 @@ class Profile(FlaskForm):
             raise ValidationError('Too many skills (max 4)')
 
 class MessageForm(FlaskForm):
-    recipient = StringField('Recipient')
-    body = TextAreaField('Message')
+    recipient = StringField('Recipient', validators=[DataRequired()])
+    body = TextAreaField('Message', validators=[DataRequired()])
 
     def validate_recipient(self, field):
         if field.data == current_user.username:
             raise ValidationError('Cannot send a message to yourself.')
+
+class RoomForm(FlaskForm):
+    callee = StringField('Callee')
+
+    def validate_callee(self, field):
+        if field.data == current_user.username:
+            raise ValidationError('Cannot call yourself.')
+        if not User.find_by_username(username=field.data):
+            raise ValidationError('User doesn\'t exist')
