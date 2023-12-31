@@ -5,13 +5,13 @@ from flask import render_template, redirect, url_for
 from werkzeug.utils import secure_filename
 
 from core import app
+from core.settings import WS_URL
 from core.auth import current_user, login_required, load_user
 from core.models import User, Message, Room
 from core.forms import Profile, MessageForm, RoomForm
 
 
 @app.route('/')
-@login_required
 def home():
     return render_template('home.html')
 
@@ -78,8 +78,8 @@ def inbox(profile=None):
                 body=form.body.data
             )
             new_message.save()
-            return redirect('inbox')
-    return render_template('inbox.html', form=form, user=current_user)
+        return redirect('.')
+    return render_template('inbox.html', profile=profile, form=form, user=current_user)
 
 
 @app.route('/room/', methods=["GET", "POST"])
@@ -96,4 +96,6 @@ def room(uuid=None):
         uuid = create_room.id
         return redirect(f'room/{uuid}')
     room = Room.find_by_id(id=uuid)
-    return render_template('room.html', form=form, room=room, user=current_user)
+    return render_template(
+        'room.html', ws_url=WS_URL, form=form, room=room, user=current_user
+    )

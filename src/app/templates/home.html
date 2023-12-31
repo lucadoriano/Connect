@@ -1,4 +1,92 @@
 {% extends "base.html" %}
+{% block extra_stylesheets %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/aos/css/aos.css') }}">
+{% endblock extra_stylesheets %}
+
 {% block content %}
-<h1>Home page</h1>
+    <div class="container marketing my-5">
+        <div data-aos="fade-up" class="row featurette">
+            <div class="col-md-7 order-md-2">
+                <h2 class="featurette-heading fw-normal lh-1">Empower your learning journey with Connect: seamless video tutoring anytime, <span class="text-body-secondary">anywhere!</span></h2>
+                <p class="lead">Embrace the world of limitless knowledge without breaking the bank! Connect is not just an app; it's a community-driven initiative offering free, voluntary video tutoring. Dive into a pool of skilled tutors who generously contribute their expertise to help you succeed. Break the barriers to education with Connect, where learning knows no price tag – it's all about passion, sharing, and collective growth.</p>
+            </div>
+            <div class="col-md-5 order-md-1">
+                <img class="img-fluid" src="{{ url_for('static', filename='img/studying-online.png') }}">
+            </div>
+        </div>
+
+        <hr data-aos="fade-up" class="featurette-divider">
+        
+        <div data-aos="fade-up" class="row my-5">
+            <div data-aos="zoom-in" class="col-lg-4 my-2">
+                <div class="text-center">
+                    <img src="https://images.pexels.com/photos/6326368/pexels-photo-6326368.jpeg" class="object-fit-cover rounded-circle my-2 mx-auto d-block" style="width: 140px; height: 140px;" alt="Profile image">            
+                    <h2 class="fw-normal">Prof. John Doe</h2>
+                    <p>Accomplished Mathematician with a passion for teaching. Specializes in advanced calculus and mathematical theory.</p>
+                    <span class="badge rounded-pill text-bg-primary">Differential Equations</span> 
+                    <span class="badge rounded-pill text-bg-primary">Number Theory</span> 
+                    <span class="badge rounded-pill text-bg-primary">Mathematical Proofs</span> 
+                    
+                </div>
+            </div>
+            <div data-aos="zoom-in" class="col-lg-4 my-2">
+                <div class="text-center">
+                    <img src="https://images.pexels.com/photos/3184644/pexels-photo-3184644.jpeg" class="object-fit-cover rounded-circle my-2 mx-auto d-block" style="width: 140px; height: 140px;" alt="Profile image">            
+                    <h2 class="fw-normal">Dr. Maria Rodriguez</h2>
+                    <p>Renowned Physicist dedicated to making complex physics concepts accessible. Experienced in quantum mechanics and theoretical physics.</p>
+                    <span class="badge rounded-pill text-bg-primary">Quantum Mechanics</span> 
+                    <span class="badge rounded-pill text-bg-primary">Theoretical Physics</span> 
+                </div>
+            </div>
+            <div data-aos="zoom-in" class="col-lg-4 my-2">
+                <div class="text-center">
+                    <img src="https://images.pexels.com/photos/1438081/pexels-photo-1438081.jpeg" class="object-fit-cover rounded-circle my-2 mx-auto d-block" style="width: 140px; height: 140px;" alt="Profile image">            
+                    <h2 class="fw-normal">Benjamin Smith</h2>
+                    <p>Computer Science enthusiast (and student) with an insatiable curiosity for all things tech. Industry experience in Software Development.</p>
+                    <span class="badge rounded-pill text-bg-primary">Algorithms, Data Structures</span>
+                    <span class="badge rounded-pill text-bg-primary">Java</span>
+                    <span class="badge rounded-pill text-bg-primary">Python</span>
+                </div>
+            </div>
+            <p class="text-center">
+                <a class="btn btn-secondary my-5" href="{{ url_for('tutors') }}">Meet our Tutors</a>
+            </p>
+        </div>
+        
+        <hr data-aos="fade-up" class="featurette-divider">
+
+        <div data-aos="fade-up" class="row featurette">
+            <div class="col-md-7">
+                <h2 class="featurette-heading fw-normal lh-1">Meet our stellar tutors: experts dedicated to your <span class="text-body-secondary">success</span></h2>
+                <p class="lead">Discover the heart of Connect – our team of volunteer tutors. Passionate about imparting knowledge, these highly skilled individuals dedicate their time to support your learning journey. From academic achievers to industry professionals, our tutors bring diverse expertise to your fingertips. Engage in quality, volunteer-led tutoring sessions that transform education into a collaborative experience, proving that the best things in life are indeed free.</p>
+            </div>
+            <div class="col-md-5">
+                <img class="img-fluid" src="{{ url_for('static', filename='img/tutor-online.png') }}">
+            </div>
+        </div>
+        
+        <hr data-aos="fade-up" class="featurette-divider">
+
+        <div data-aos="fade-up" class="row featurette">
+            <div class="col-md-7 order-md-2">
+                <h2 class="featurette-heading fw-normal lh-1">Elevate learning, embrace community: Connect's <span class="text-body-secondary">ideal</span></h2>
+                <p class="lead">Connect redefines education as a shared experience, where our volunteer tutors, driven by expertise and compassion, offer their skills without charge. Dive into a community where learning is a collective endeavor, and every session is a step towards personal and shared success. With Connect, education is not just accessible; it's a testament to the power of community, volunteerism, and the belief that knowledge should be freely given and received.</p>
+            </div>
+            <div class="col-md-5 order-md-1">
+                <img class="img-fluid" src="{{ url_for('static', filename='img/collaboration.png') }}">
+            </div>
+        </div>
+    </div>
 {% endblock %}
+
+{% block extra_scripts %}
+    <script src="{{url_for('static', filename='vendor/aos/js/aos.js') }}"></script>
+    <script>
+        AOS.init({
+            delay: 400,
+            debounceDelay: 50,
+            once: false,
+            mirror: true  
+        });
+    </script>
+{% endblock extra_scripts %}

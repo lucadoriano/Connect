@@ -38,16 +38,3 @@ document.addEventListener("DOMContentLoaded", function () {
     handleTabClick(receivedMessageList);
     handleTabClick(sentMessageList);
 });
-
-$(document).ready(function () {
-    const path = window.location.pathname.split('/');
-    const username = path.length > 2 ? [path.length - 1] : null;
-    const urlUsername = path[2]
-
-    // Check if a username is extracted
-    if (username) {
-        // Opens the modal if a username is in the path
-        $('#staticBackdrop').modal('show');
-        $('#recipient').val(urlUsername)
-    }
-});

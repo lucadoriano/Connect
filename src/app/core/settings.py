@@ -23,3 +23,5 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static/img/profile') # change with docker volume
 TEMPLATE_FOLDER = os.path.join(BASE_DIR, 'templates')
 STATIC_FOLDER = os.path.join(BASE_DIR, 'static')
+
+WS_URL = "ws://localhost:9991"
