@@ -1,16 +1,29 @@
 from flask_wtf import FlaskForm
 
-from wtforms import EmailField, PasswordField, StringField, TextAreaField, FileField
+from wtforms import (
+    EmailField,
+    PasswordField,
+    StringField,
+    TextAreaField,
+    FileField,
+    RadioField
+)
+
 from wtforms.validators import ValidationError, DataRequired, EqualTo, Length
 
 from core.models import User
 from core.auth import current_user
     
-class Login(FlaskForm):
+class LoginForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
 
-class Register(FlaskForm):
+class RegisterForm(FlaskForm):
+    type = RadioField(
+        'I want to join as a:',
+        choices=["Student", "Tutor"], 
+        validators=[DataRequired()]
+    )
     email = EmailField('Email', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[
@@ -24,7 +37,7 @@ class Register(FlaskForm):
         if User.find_by_email(email=field.data):
             raise ValidationError('User already exist')
 
-class Profile(FlaskForm):
+class ProfileForm(FlaskForm):
     image = FileField('Image')
     fullname = StringField('Fullname')
     description = StringField('Description')

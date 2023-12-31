@@ -8,10 +8,22 @@
         <img class="d-block mx-auto" src="{{ url_for('static', filename='img/logo.png') }}" style="width: 226.5px; height: 39.9px;"> 
         <div class="my-5">
             <div class="">
-                {% if request.path == '/register' %}
+                {% if request.path == '/register/' %}
                     <h2>Register</h2>
                     <form method="POST">
                         {{ form.csrf_token }}
+                        <div class="mb-3 text-center">
+                            {{ form.type.label(class="form-label") }}
+                            <div class="form-class">
+
+                                {% for subfield in form.type %}
+                                    <tr>
+                                        <td>{{ subfield(class="form-check-input") }}</td>
+                                        <td>{{ subfield.label }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </div>
+                        </div>
                         <div class="mb-3">
                             {{ form.email.label(class="form-label") }}
                             {{ form.email(class="form-control font-awesome", size=40, placeholder="  example@gmail.com") }}

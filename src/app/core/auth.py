@@ -12,7 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from core import app
 from core.models import User
-from core.forms import Login, Register
+from core.forms import LoginForm, RegisterForm
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
@@ -22,7 +22,7 @@ login_manager.login_view = 'login'
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    form = Register()
+    form = RegisterForm()
     if form.validate_on_submit():            
         user = User(
             email=form.email.data,
@@ -31,7 +31,9 @@ def register():
                 form.password.data
             )
         )
-        user.save()
+        user.save() # First save to create user instance into database
+        user.profile.tutor = True if form.type.data == "Tutor" else False
+        user.save() # Then save the tutor status
         login_user(user)
         return redirect(url_for('home'))
     return render_template('auth.html', form=form)
@@ -41,7 +43,7 @@ def register():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    form = Login()
+    form = LoginForm()
     if form.validate_on_submit():
         try:
             user = User.find_by_email(email=form.email.data)

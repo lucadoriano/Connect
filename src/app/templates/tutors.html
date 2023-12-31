@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% if tutors.total == 0 %}
+            <div class="container d-flex align-items-center justify-content-center vh-100">
+                <p>No tutors available yet. Why don't you apply?</p>
+            </div>
+        {% else %}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 justify-content-center gutters-sm">
+                {% for tutor in tutors.items %}
+                    <div class="col mb-3">
+                        <div class="card my-5 align-middle">
+                            <div class="card-body text-center" style="height: 300px; max-height: 300px;">
+                                <img src="{{ tutor.image if tutor.image else url_for('static', filename='img/default-profile-image.png') }}" class="object-fit-cover rounded-circle my-2 mx-auto d-block" style="width: 140px; height: 140px;" alt="Profile image">            
+                                <h5 class="card-title">{{tutor.fullname}}</h5>
+                                <p class="text-secondary mb-1">{{tutor.description}}</p>
+                                                
+                                {% set skills = tutor.skills.split(',') %}
+                                {% for skill in skills %}
+                                    <span class="badge rounded-pill text-bg-primary">{{skill}}</span> 
+                                {% endfor %}
+                            </div>
+                            <div class="card-footer text-center">
+                                <a class="btn btn-light" type="button" href="{{ url_for('profile', username = tutor.user.username) }}">Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if tutors.has_prev %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('tutors', page=tutors.prev_num) }}">Previous</a></li>
+                    {% endif %}
+                    
+                    {% for num in tutors.iter_pages() %}
+                        {% if num %}
+                            <li class="page-item {% if num == tutors.page %}active{% endif %}">
+                                <a class="page-link" href="{{ url_for('tutors', page=num) }}">{{ num }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if tutors.has_next %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('tutors', page=tutors.next_num) }}">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+{% endblock content %}

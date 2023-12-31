@@ -1,14 +1,14 @@
 import os
 
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 
 from werkzeug.utils import secure_filename
 
 from core import app
 from core.settings import WS_URL
 from core.auth import current_user, login_required, load_user
-from core.models import User, Message, Room
-from core.forms import Profile, MessageForm, RoomForm
+from core.models import User, Profile, Message, Room
+from core.forms import ProfileForm, MessageForm, RoomForm
 
 
 @app.route('/')
@@ -20,7 +20,7 @@ def home():
 @app.route('/profile/<string:username>/')
 @login_required
 def profile(username=None):
-    form = Profile()
+    form = ProfileForm()
     if not username:
         username = current_user.username
     try:
@@ -49,14 +49,19 @@ def profile(username=None):
         user.profile.skills = ", ".join(skills)
         user.profile.about = form.about.data
         user.save()
-        return redirect('profile')
+        return redirect('.')
     return render_template('profile.html', form=form, user=user)
 
 
 @app.route('/tutors/')
 @login_required
 def tutors():
-    return render_template('home.html')
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    tutors = Profile.query.filter_by(tutor=True).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+    return render_template('tutors.html', tutors=tutors)
 
 
 @app.route('/notes/')
