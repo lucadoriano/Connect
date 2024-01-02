@@ -4,10 +4,12 @@ from flask import render_template, redirect, url_for, request
 
 from werkzeug.utils import secure_filename
 
+from markdown import markdown
+
 from core import app
 from core.settings import WS_URL
 from core.auth import current_user, login_required, load_user
-from core.models import User, Profile, Message, Room
+from core.models import User, Profile, Message, Room, Note
 from core.forms import ProfileForm, MessageForm, RoomForm
 
 
@@ -64,10 +66,24 @@ def tutors():
     return render_template('tutors.html', tutors=tutors)
 
 
-@app.route('/notes/')
+@app.route('/notes/', methods=["GET", "POST"])
 @login_required
 def notes():
-    return render_template('home.html')
+    notes = Note.public()
+    parsed_notes = []
+    for note in notes:
+       note.content = markdown(note.content)
+       parsed_notes.append(note)
+
+    if request.method == 'POST':
+        if request.form['markdown']:
+            new_note = Note(
+                author_id=current_user.id,
+                content=request.form['markdown']
+            )
+            new_note.save()
+        return redirect('.')
+    return render_template('notes.html', notes=parsed_notes)
 
 @app.route('/inbox/', methods=["GET", "POST"])
 @app.route('/inbox/<string:profile>/', methods=["GET", "POST"])

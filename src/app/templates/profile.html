@@ -11,9 +11,9 @@
             {% endif %}
             <img src="{{ user.profile.image if user.profile.image else url_for('static', filename='img/default-profile-image.png') }}" class="object-fit-cover rounded-circle my-2 mx-auto d-block" style="width: 200px; height: 200px;" alt="Profile image">            
             
-            <div class="card-body text-center" id="card-profile">
+            <div class="card-body text-center" id="card-profile" style="height: 650px; max-height: 650px;">
                 {% if user.profile.fullname %}
-                    <h5 class="cabrd-title">{{user.profile.fullname}}</h5>
+                    <h5 class="card-title">{{user.profile.fullname}}</h5>
                 {% endif %}
                 <p>@{{user.username}}</p>
                 {% if user.profile.description %}
@@ -25,11 +25,15 @@
                     <span class="badge rounded-pill text-bg-primary">{{skill}}</span> 
                 {% endfor %}
                 
+                {% if user.id == current_user.id %}
+                    {% if not user.profile.fullname and not user.profile.description and not user.profile.skills %}
+                        <p class="text-center">Customize your profile to display more information.</p>
+                    {% endif %}
+                {% endif %}
+
                 {% if not user.id == current_user.id %}
                     <a type="button" class="btn btn-primary d-block w-25 font-awesome mx-auto my-4" href="{{ url_for('inbox', profile=user.username) }}"> Contact me</a>
                 {% endif %}
-                <!-- {% if user.profile["social"] %}
-                {% endif %} -->
                 {% if user.profile.about %}
                     <div class="accordion my-5" id="accordion">
                         <div class="accordion-item">

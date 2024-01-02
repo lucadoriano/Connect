@@ -81,6 +81,11 @@ class Profile(db.Model):
         back_populates='recipient_profile',
         foreign_keys='Message.recipient_id'
     )
+    notes_created = db.relationship(
+        'Note',
+        back_populates='author_profile',
+        foreign_keys='Note.author_id'
+    )
 
     def __init__(self, user_id):
         self.user_id = user_id
@@ -93,7 +98,7 @@ class Message(db.Model):
     id = db.Column(Integer, primary_key=True)
     sender_id = db.Column(UUID, ForeignKey('profile.user_id'), nullable=False)
     recipient_id = db.Column(UUID, ForeignKey('profile.user_id'), nullable=False)
-    body = db.Column(String(150), nullable=False)
+    body = db.Column(String(500), nullable=False)
     timestamp = db.Column(DateTime(timezone=True))
 
     sender_profile = db.relationship(
@@ -140,6 +145,34 @@ class Room(db.Model):
     @classmethod
     def find_by_id(cls, id: uuid):
         return cls.query.filter_by(id=id).first()
+
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+
+        except Exception as e:
+            db.session.rollback()
+            db.session.close()
+            raise e
+
+
+class Note(db.Model):
+    id = db.Column(UUID, primary_key=True, default=uuid.uuid4)
+    author_id = db.Column(UUID, ForeignKey('profile.user_id'), nullable=False)
+    content = db.Column(String(1000), nullable=False)
+    timestamp = db.Column(DateTime, default=datetime.now())
+    archived = db.Column(Boolean, default=False)
+
+    author_profile = db.relationship(
+        'Profile', 
+        back_populates='notes_created',
+        foreign_keys='Note.author_id'
+    )
+
+    @classmethod
+    def public(cls):
+        return cls.query.filter_by(archived=False).order_by(Note.timestamp.desc())
 
     def save(self):
         try:
