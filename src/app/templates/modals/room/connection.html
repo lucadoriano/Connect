@@ -1,0 +1,16 @@
+<div class="modal fade" id="startCall" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="startCallLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="startCallLabel">Room - waiting for student to join</h1>
+            </div>
+            <div class="modal-body" id="callModalStatus">
+                Share this room address with the student. Once they connect, you'll be able to start the call.
+                <p class="my-2" style="font-size: 12px;"><small>If you're facing troubles during connection, try refreshing the page and advise the student to do the same.</small></p>
+            </div>  
+            <div class="modal-footer">
+                <button class="btn btn-primary disabled" type="button" id='callButton' onclick="createOffer()" data-bs-dismiss="modal">Call</button>
+            </div>
+        </div>
+    </div>
+</div>

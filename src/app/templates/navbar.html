@@ -37,9 +37,11 @@
     </div>
   {% endif %}
   {% if not current_user.is_authenticated %}
-    <div class="ms-auto d-flex m-2">
-      <a class="btn btn-secondary" href="{{ url_for('login') }}">Login</a>
-    </div>
+    {% if not request.path == '/register/' and not request.path == '/login/' %}
+      <div class="ms-auto d-flex m-2">
+        <a class="btn btn-secondary" href="{{ url_for('login') }}">Login</a>
+      </div>
+    {% endif %}
   {% endif %}
 </nav>
 {% endblock header %}
