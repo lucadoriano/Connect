@@ -6,15 +6,23 @@
 
 {% block content %}
     <div class="container">
-        <div>
-            <form method="POST" onsubmit="return validateForm()">
-                <div class="form-group my-5">
-                    <textarea class="form-control" id="markdown" name="markdown"></textarea>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
-        </div>
+        <form method="POST">
+            {{ form.csrf_token }}
+            <div class="form-group my-5">
+                {{ form.markdown(class="form-control") }}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
 
+        <div class="btn-group">
+            <a class="nav-item nav-link dropdown-toggle mx-lg-3" type="button" data-bs-toggle="dropdown" data-bs-auto-close="inside" aria-expanded="false">
+              Filter
+            </a>
+            <ul class="dropdown-menu dropdown-menu-lg-end">
+                <li><a class="dropdown-item" href="{{ url_for('notes') }}">All</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('notes', filter='authored') }}">Authored</a></li>
+            </ul>
+          </div>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 justify-content-center gutters-sm" data-masonry='{"percentPosition": true }'>
             {% for note in notes %}
                 <div class="card col-xs-12 col-sm-6 col-lg-6 m-3">
@@ -29,11 +37,23 @@
                             {{ note.content|safe }}
                         </div>
                     </div>
+                    {% if note.author_profile == current_user.profile %}
+                        <div class="d-flex justify-content-end my-2">
+                            <a role="button" class="link-danger" data-bs-toggle="modal" data-note-id="{{note.id}}" data-bs-target="#deleteNote">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </a>
+                        </div>
+                        {% with note=note %}
+                            {% include 'modals/delete-note.html' %}
+                        {% endwith %}
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
     </div>
 {% endblock content %}
+
+
 
 {% block extra_scripts %}
     <script src="{{ url_for('static', filename='vendor/masonry/js/masonry.min.js') }}"></script>
@@ -47,14 +67,5 @@
 
         
         });
-
-        function validateForm() {
-            var markdownContent = simplemde.value();
-            if (markdownContent.trim() === '') {
-                alert("Please enter some content before submitting.");
-                return false;
-            }
-            return true;
-        }
     </script>
 {% endblock extra_scripts %}

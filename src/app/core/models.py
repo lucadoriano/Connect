@@ -170,9 +170,28 @@ class Note(db.Model):
         foreign_keys='Note.author_id'
     )
 
+
+    @classmethod
+    def get_author(cls, id):
+        return cls.query.get(id).author_id
+
     @classmethod
     def public(cls):
         return cls.query.filter_by(archived=False).order_by(Note.timestamp.desc())
+    
+    @classmethod
+    def authored(cls, author):
+        return cls.query.filter_by(archived=False, author_id=author)\
+            .order_by(Note.timestamp.desc())
+
+    def delete(self):
+        try:
+            db.session.delete(self)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            db.session.close()
+            raise e
 
     def save(self):
         try:

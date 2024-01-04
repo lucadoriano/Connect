@@ -10,7 +10,7 @@ from core import app
 from core.settings import WS_URL
 from core.auth import current_user, login_required, load_user
 from core.models import User, Profile, Message, Room, Note
-from core.forms import ProfileForm, MessageForm, RoomForm
+from core.forms import ProfileForm, MessageForm, RoomForm, MarkdownForm
 
 
 @app.route('/')
@@ -51,7 +51,7 @@ def profile(username=None):
         user.profile.skills = ", ".join(skills)
         user.profile.about = form.about.data
         user.save()
-        return redirect('.')
+        return redirect(url_for('profile'))
     return render_template('profile.html', form=form, user=user)
 
 
@@ -69,21 +69,38 @@ def tutors():
 @app.route('/notes/', methods=["GET", "POST"])
 @login_required
 def notes():
-    notes = Note.public()
+    form = MarkdownForm()
+    filter = request.args.get('filter')
+    if not filter:
+        notes = Note.public()
+    if filter == 'authored':
+        notes = Note.authored(current_user.id)
+        
     parsed_notes = []
     for note in notes:
        note.content = markdown(note.content)
        parsed_notes.append(note)
 
-    if request.method == 'POST':
-        if request.form['markdown']:
+    if form.validate_on_submit():
+        if form.markdown.data:
             new_note = Note(
                 author_id=current_user.id,
-                content=request.form['markdown']
+                content=form.markdown.data
             )
             new_note.save()
-        return redirect('.')
-    return render_template('notes.html', notes=parsed_notes)
+        return redirect(url_for('notes'))
+    return render_template('notes.html', notes=parsed_notes, form=form)
+
+
+@app.route('/note/delete/<uuid:note>/', methods=["POST"])
+@login_required
+def delete_note(note):
+    delete_note = Note.query.get(str(note))
+    if delete_note:
+        if Note.get_author(str(note)) == current_user.id:
+            delete_note.delete()
+    return redirect(url_for('notes'))
+
 
 @app.route('/inbox/', methods=["GET", "POST"])
 @app.route('/inbox/<string:profile>/', methods=["GET", "POST"])
@@ -99,7 +116,7 @@ def inbox(profile=None):
                 body=form.body.data
             )
             new_message.save()
-        return redirect('.')
+        return redirect(url_for('inbox'))
     return render_template('inbox.html', profile=profile, form=form, user=current_user)
 
 
@@ -115,7 +132,7 @@ def room(uuid=None):
         )
         create_room.save()
         uuid = create_room.id
-        return redirect(f'room/{uuid}')
+        return redirect(url_for('room', uuid=uuid))
     room = Room.find_by_id(id=uuid)
     return render_template(
         'room.html', ws_url=WS_URL, form=form, room=room, user=current_user

@@ -64,3 +64,6 @@ class RoomForm(FlaskForm):
             raise ValidationError('Cannot call yourself.')
         if not User.find_by_username(username=field.data):
             raise ValidationError('User doesn\'t exist')
+
+class MarkdownForm(FlaskForm):
+    markdown = TextAreaField('Markdown', id='markdown')

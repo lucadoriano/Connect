@@ -9,14 +9,20 @@
         {% else %}
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 justify-content-center gutters-sm">
                 {% for tutor in tutors.items %}
-                    {% if tutor.fullname %}
                         <div class="col mb-3">
                             <div class="card my-5 align-middle">
                                 <div class="card-body text-center" style="height: 300px; max-height: 300px;">
                                     <img src="{{ tutor.image if tutor.image else url_for('static', filename='img/default-profile-image.png') }}" class="object-fit-cover rounded-circle my-2 mx-auto d-block" style="width: 140px; height: 140px;" alt="Profile image">            
-                                    <h5 class="card-title">{{tutor.fullname}}</h5>
-                                    <p class="text-secondary mb-1">{{tutor.description}}</p>
-                                                    
+                                    <h5 class="card-title">
+                                        {% if tutor.fullname %}
+                                            {{tutor.fullname}}
+                                        {% else %}
+                                            @{{tutor.user.username}}
+                                        {% endif %}
+                                    </h5>
+                                    {% if tutor.description %}
+                                        <p class="text-secondary mb-1">{{tutor.description}}</p>
+                                    {% endif %}                
                                     {% set skills = tutor.skills.split(',') %}
                                     {% for skill in skills %}
                                         <span class="badge rounded-pill text-bg-primary">{{skill}}</span> 
@@ -27,7 +33,6 @@
                                 </div>
                             </div>
                         </div>
-                    {% endif %}
                 {% endfor %}
             </div>
 
