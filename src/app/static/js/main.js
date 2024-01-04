@@ -12,12 +12,3 @@ window.onload = () => {
         });
     }
 }
-//TODO - organize in a different file
-$(document).ready(function () {
-    $('#card-profile-edit').hide();
-    $('#toggleEdit').click(function () {
-        $('#card-profile').toggle();
-        $('#card-profile-edit').toggle();
-
-    });
-});
