@@ -1,15 +1,45 @@
-
+version: '3'
 services:
+  nginx:
+    image: nginx
+    volumes:
+      - ./etc/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+
   postgres:
     image: postgres
-    ports:
-      - "5432:5432"
+    expose:
+      - 5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
-        - postgres:/data:rw
-        
+      - postgres:/data:rw
+
+  app:
+    build: ./../docker/app/
+    depends_on:
+      - postgres
+    expose:
+      - 8000
+    environment:
+      - FLASK_APP=core
+    volumes:
+      - ./../src/app/:/usr/local/lib/python3.12/site-packages/src/
+
+  signaling:
+    build: ./../docker/signaling/
+    depends_on:
+      - app
+    # command: python server.py #todo fix not working unless you run docker-compose exec signaling python server.py
+    ports:
+      - "6000:6000"
+    expose:
+      - 6000
+    volumes:
+      - ./../src/signaling/:/usr/local/lib/python3.12/site-packages/src/
+
 volumes:
-  postgres:  
+  postgres:

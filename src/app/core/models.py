@@ -64,10 +64,10 @@ class Profile(db.Model):
 
     id = db.Column(Integer, primary_key=True)
     user_id = db.Column(UUID, ForeignKey('user.id'), unique=True, nullable=False)
-    image = db.Column(String(), nullable=True)
+    image = db.Column(String, nullable=True)
     fullname = db.Column(String(100), nullable=True)
     description = db.Column(String(100), nullable=True)
-    about = db.Column(String(500), nullable=True)
+    about = db.Column(String, nullable=True)
     skills = db.Column(String(500), default='', nullable=True)
     tutor = db.Column(Boolean, default=False)
 
@@ -98,7 +98,7 @@ class Message(db.Model):
     id = db.Column(Integer, primary_key=True)
     sender_id = db.Column(UUID, ForeignKey('profile.user_id'), nullable=False)
     recipient_id = db.Column(UUID, ForeignKey('profile.user_id'), nullable=False)
-    body = db.Column(String(500), nullable=False)
+    body = db.Column(String, nullable=False)
     timestamp = db.Column(DateTime(timezone=True))
 
     sender_profile = db.relationship(
@@ -160,7 +160,7 @@ class Room(db.Model):
 class Note(db.Model):
     id = db.Column(UUID, primary_key=True, default=uuid.uuid4)
     author_id = db.Column(UUID, ForeignKey('profile.user_id'), nullable=False)
-    content = db.Column(String(1000), nullable=False)
+    content = db.Column(String, nullable=False)
     timestamp = db.Column(DateTime, default=datetime.now())
     archived = db.Column(Boolean, default=False)
 

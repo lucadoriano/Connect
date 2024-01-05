@@ -46,9 +46,11 @@ def profile(username=None):
             user.profile.image = url_for(
                 'static', filename=f'img/profile/{rename_image}'
             )
+
+        if form.skills.data:
+            user.profile.skills = ", ".join(skills)
         user.profile.fullname = form.fullname.data
         user.profile.description = form.description.data
-        user.profile.skills = ", ".join(skills)
         user.profile.about = form.about.data
         user.save()
         return redirect(url_for('profile'))

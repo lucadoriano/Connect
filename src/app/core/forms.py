@@ -33,6 +33,10 @@ class RegisterForm(FlaskForm):
     ])
     confirm_password = PasswordField('Confirm password', validators=[DataRequired()])
 
+    def validate_username(self, field):
+        if User.find_by_username(username=field.data):
+            raise ValidationError('Username not available')
+
     def validate_email(self, field):
         if User.find_by_email(email=field.data):
             raise ValidationError('User already exist')
@@ -45,8 +49,17 @@ class ProfileForm(FlaskForm):
     about = TextAreaField('About')
 
     def validate_skills(self, field):
-        if len(field.data.split(',')) > 4:
+        skills = field.data.split(',')
+
+        if len(skills) > 4:
             raise ValidationError('Too many skills (max 4)')
+
+        for skill in skills:
+            if not skill.strip():
+                raise ValidationError('Skills should not contain empty values')
+
+        if field.data.endswith(' ,'):
+            field.data = field.data[:-2]
 
 class MessageForm(FlaskForm):
     recipient = StringField('Recipient', validators=[DataRequired()])
@@ -54,14 +67,14 @@ class MessageForm(FlaskForm):
 
     def validate_recipient(self, field):
         if field.data == current_user.username:
-            raise ValidationError('Cannot send a message to yourself.')
+            raise ValidationError('Cannot send a message to yourself')
 
 class RoomForm(FlaskForm):
     callee = StringField('Callee')
 
     def validate_callee(self, field):
         if field.data == current_user.username:
-            raise ValidationError('Cannot call yourself.')
+            raise ValidationError('Cannot call yourself')
         if not User.find_by_username(username=field.data):
             raise ValidationError('User doesn\'t exist')
 

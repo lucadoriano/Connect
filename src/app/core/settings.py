@@ -13,7 +13,7 @@ DATABASE = URL.create(
     'postgresql+psycopg2',
     username='postgres',
     password=os.environ.get('DATABASE_PASSWORD'),
-    host='localhost',
+    host='postgres', #fetches internal docker-compose address, given its hostname
     port=5432,
     database='postgres'
 )
@@ -24,4 +24,4 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static/img/profile') # change with dock
 TEMPLATE_FOLDER = os.path.join(BASE_DIR, 'templates')
 STATIC_FOLDER = os.path.join(BASE_DIR, 'static')
 
-WS_URL = "ws://localhost:9991"
+WS_URL = "ws://localhost:9991" #or tunneling/server address

@@ -26,7 +26,7 @@ def register():
     if form.validate_on_submit():            
         user = User(
             email=form.email.data,
-            username=form.username.data,
+            username="".join(form.username.data.lower().split()),
             password=generate_password_hash(
                 form.password.data
             )
