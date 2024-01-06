@@ -128,14 +128,20 @@ def inbox(profile=None):
 def room(uuid=None):
     form = RoomForm()
     if form.validate_on_submit():
-        create_room = Room(
-            caller=current_user.username,
-            callee=form.callee.data
-        )
-        create_room.save()
-        uuid = create_room.id
-        return redirect(url_for('room', uuid=uuid))
+        if form.callee.data:
+            create_room = Room(
+                caller=current_user.username,
+                callee=form.callee.data
+            )
+            create_room.save()
+            uuid = create_room.id
+            return redirect(url_for('room', uuid=uuid))
     room = Room.find_by_id(id=uuid)
     return render_template(
         'room.html', ws_url=WS_URL, form=form, room=room, user=current_user
     )
+
+
+@app.errorhandler(404) 
+def not_found(e): 
+    return render_template("errors/404.html")

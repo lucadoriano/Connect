@@ -70,11 +70,12 @@ class MessageForm(FlaskForm):
             raise ValidationError('Cannot send a message to yourself')
 
 class RoomForm(FlaskForm):
-    callee = StringField('Callee')
+    callee = StringField('Callee', validators=[DataRequired()])
 
     def validate_callee(self, field):
         if field.data == current_user.username:
             raise ValidationError('Cannot call yourself')
+
         if not User.find_by_username(username=field.data):
             raise ValidationError('User doesn\'t exist')
 

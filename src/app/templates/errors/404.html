@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Page Not Found - Connect{% endblock %} 
+{% block content %} 
+    <div class="text-center">
+        <img class="img-fluid" src="{{ url_for('static', filename='img/404.png') }}">
+        <h1>Oops! Looks like the page doesn't exist anymore</h1> 
+        <a class="link-secondary" href="{{ url_for('home') }}"><p>Click here</a> to go to the home.</p> 
+    </div>
+
+
+{% endblock content %} 
