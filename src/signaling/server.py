@@ -126,7 +126,7 @@ def onclose(client: socket.socket):
 
     
 if __name__ == '__main__':
-    ws = WebSocket("localhost", 9991)
+    ws = WebSocket("0.0.0.0", 6000)
     ws.onmessage(onmessage)
     ws.onopen(onopen)
     ws.onclose(onclose)

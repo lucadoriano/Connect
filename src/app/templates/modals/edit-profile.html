@@ -1,0 +1,55 @@
+<div class="modal fade" id="editProfile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editProfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editProfileLabel">Edit profile: @{{user.username}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.csrf_token }}
+                    <div class="mb-3">
+                        {{ form.image.label(class="form-label") }}
+                        {{ form.image(class="form-control", size=40) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.fullname.label(class="form-label") }}
+                        {{ form.fullname(class="form-control", size=40, value=user.profile.fullname if user.profile.fullname is not none else '') }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label") }}
+                        {{ form.description(class="form-control", size=40, value=user.profile.description if user.profile.description is not none else '') }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.skills.label(class="form-label") }}
+                        {% if form.skills.errors %}
+                            {{ form.skills(class="form-control is-invalid", size=40, value=user.profile.skills) }}
+                            {% for error in form.skills.errors %}
+                                <small class="invalid-feedback">{{error}}</small>
+                            {% endfor %}
+                        {% else %}
+                            <div class="input-group">
+                                {{ form.skills(class="form-control", size=40, value=user.profile.skills) }}
+                                {% if user.profile.skills %}
+                                    {% set skills = user.profile.skills.split(',') %}
+                                    {% for skill in skills %}
+                                        <span class="edit-skill badge rounded-pill text-bg-primary my-auto mx-1">{{skill}}</span>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.about.label(class="form-label") }}
+                        {% set content = form.about.process_data(user.profile.about) %}
+                        {{ form.about(class="form-control", size=40 ) }}
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-primary" type="submit">Confirm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

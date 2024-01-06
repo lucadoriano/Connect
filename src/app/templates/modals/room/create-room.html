@@ -1,0 +1,30 @@
+<div class="modal fade" id="createRoom" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createRoomLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createRoomLabel">Create a room to start a call</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {{ form.csrf_token }}
+                    <div class="mb-3">
+                        {{ form.callee.label(class="form-label") }}
+
+                        {% if form.callee.errors %}
+                            {{ form.callee(class="form-control is-invalid font-awesome", size=40, placeholder='@ Enter username') }}
+                                {% for error in form.recipient.errors %}
+                                    <small class="invalid-feedback">{{error}}</small>
+                                {% endfor %}
+                        {% else %}
+                            {{ form.callee(class="form-control font-awesome", size=40, placeholder='@ Enter username') }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Create</button>
+                </form> 
+            </div>
+        </div>
+    </div>
+</div>

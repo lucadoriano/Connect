@@ -1,4 +1,5 @@
-let socket = new WebSocket("ws://localhost:9991");
+const WS_URL = $("#connection-info").data("ws_url")
+let socket = new WebSocket(WS_URL);
 
 
 socket.onopen = function(e) {
