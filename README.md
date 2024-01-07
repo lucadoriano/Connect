@@ -76,6 +76,13 @@ If you choose to run the project using Docker Compose, you could choose skip ste
     docker-compose up -d
 4. Access the project at http://127.0.0.1/
 
+ 
+5.  If you get this error "`no python application found, check your startup logs for errors`",
+    simply restart the docker-compose by doing
+
+    ```bash
+     docker-compose restart
+
 #### Stop the project
 * To stop the project and its containers, run:
 
