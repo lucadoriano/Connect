@@ -14,5 +14,3 @@ RUN rm -r ./requirements.txt
 COPY ./python_packages /usr/local/lib/python3.12/site-packages
 
 WORKDIR /usr/local/lib/python3.12/site-packages/src/
-
-CMD [ "uwsgi", "--ini", "wsgi.ini" ]
