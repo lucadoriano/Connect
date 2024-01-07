@@ -15,7 +15,7 @@ DATABASE = URL.create(
     password=os.environ.get('DATABASE_PASSWORD', 'demo1234'),
     host='postgres', #fetches internal docker-compose address, given its hostname
     port=5432,
-    database='postgres'
+    database='connect_db'
 )
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'Chym09p5qFDBzJQg1A9VAwphByyndbe0')
