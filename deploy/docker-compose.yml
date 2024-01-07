@@ -23,7 +23,7 @@ services:
       POSTGRES_PASSWORD: demo1234
       POSTGRES_DB: connect_db
     healthcheck:
-      test: pg_isready -U postgres
+      test: pg_isready
     volumes:
       - postgres:/data:rw
     networks:
