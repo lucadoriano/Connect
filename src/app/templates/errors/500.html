@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Unexpected Error - Connect{% endblock %} 
+{% block content %} 
+    <div class="text-center">
+        <img class="img-fluid" src="{{ url_for('static', filename='img/500.png') }}">
+        <h1>Oops! An unexpected error happened... we're so sorry</h1> 
+        <a class="link-secondary" href="{{ url_for('home') }}"><p>Click here</a> to go to the home.</p> 
+    </div>
+
+
+{% endblock content %} 

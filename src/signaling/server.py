@@ -1,14 +1,12 @@
 import socket
 import json
 
-from websocket.websocket import WebSocket
-
-
+from core.websocket import WebSocket
 
 MAX_USERS = 2
 
-rooms = {}
-clients = {}
+rooms = {} # tracks rooms and users inside the rooms
+clients = {} #stores username and socket
 
 
 def send_to_room(roomid, message):
@@ -23,23 +21,26 @@ def send_log(client, message):
     }))
 
 def get_user_client(user):
+    """Return user socket given their username if its stored already"""
     for username, client in clients.items():
         if user == username:
             return client
 
-
 def get_client_username(socket):
+    """Retrieve username of user given their socket"""
     for username, client in clients.items():
         if client == socket:
             return username
 
 def remove_from_room(username):
+    """Remove a user from room given their username"""
     for room_id, users in rooms.items():
         if username in users:
             index = rooms[room_id].index(username)
             rooms[room_id].pop(index)
 
 def remove_empty_room():
+    """Removes room if its empty"""
     rooms_to_remove = []
     for room_id, users in rooms.items():
         if not users:
@@ -50,19 +51,21 @@ def remove_empty_room():
 
 
 def send_to_user(username, message):
+    """Given their username, send message only to that user"""
     client = get_user_client(username)
     ws.send(client, json.dumps(message))
 
 def onmessage(client: socket.socket, message: str):
-    # print(f"Message from {client.getpeername()}: {message}")
     try:
-        type, params = json.loads(message).values()
+        # parses the values that are being sent from the frontend
+        type, params = json.loads(message).values() 
         
         if type == "join":
             username = params["username"]
             room_id  = params["room_id"]
 
-            if not room_id in rooms.keys():
+            # if room is not stored    
+            if not room_id in rooms.keys(): 
                 if room_id:
                     rooms[room_id] = []
                     send_log(client, "Room does not exist, created now") 
@@ -71,8 +74,8 @@ def onmessage(client: socket.socket, message: str):
 
             if len(rooms[room_id]) >= MAX_USERS:
                 send_log(client, "Room is full")
-                send_log(client, rooms[room_id])
-            #     return
+                send_log(client, rooms[room_id]) #sends users connected
+                return
 
             if username not in rooms[room_id]:
                 rooms[room_id].append(username)
@@ -110,9 +113,6 @@ def onmessage(client: socket.socket, message: str):
             })
     except json.JSONDecodeError as e:
         print(f"Error decoding JSON: {e}")
-
-
-
 
 def onopen(client: socket.socket):
     print(f"Client connected: {client.getpeername()}")

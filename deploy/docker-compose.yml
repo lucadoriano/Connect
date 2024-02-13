@@ -51,6 +51,8 @@ services:
     command: python -u server.py
     expose:
       - 6000
+    ports:
+      - "6000:6000"
     volumes:
       - ./../src/signaling/:/usr/local/lib/python3.12/site-packages/src/
     networks:

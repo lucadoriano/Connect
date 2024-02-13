@@ -2,7 +2,10 @@ __pycache__
 instance
 migrations
 **/img/profile/
+presentation/**
 
 .venv
 .env
 .DS_Store
+profile.csv
+user.csv

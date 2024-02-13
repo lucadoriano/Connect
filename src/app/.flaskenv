@@ -1,1 +1,2 @@
 FLASK_APP=core
+FLASK_DEBUG=False

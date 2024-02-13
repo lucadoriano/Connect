@@ -80,6 +80,8 @@
                             {{ form.password(class="form-control font-awesome", size=40, placeholder='  Enter your password') }}
                         </div>
                         <button class="btn btn-primary w-50 d-block mx-auto" type="submit">Sign in</button>
+                        <h6 id="recover-link" onclick={recover()} class="btn text-center my-5"><u>Forgot your password?</u></h6>
+                        {% include 'modals/password_recovery.html' %}
                         <h6 class="text-center my-5">Don't have an account? <a href="{{ url_for('register') }}">Create one</a></h6>
                     </form>
                 {% endif %}
@@ -88,3 +90,15 @@
     </div>
 </div>    
 {% endblock content %}
+
+{% block extra_scripts %}
+<script>
+    $(document).ready(function() {
+        $('#recoverPassword').modal('hide');
+    });
+
+    function recover() {
+        $('#recoverPassword').modal('toggle')
+    }
+</script>
+{% endblock extra_scripts %}
