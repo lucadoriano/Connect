@@ -175,6 +175,15 @@ class WebSocket(object):
       message = bytearray()
       if payload is not None:
          try:
+            """ From RFC 6455 section 5.3: 
+            To convert masked data into unmasked data, or vice versa, the following
+            algorithm is applied.
+            Octet (byte) i of the transformed data ("transformed-octet-i") is the XOR of
+            octet i of the original data ("original-octet-i") with octet at index
+            i modulo 4 of the masking key ("masking-key-octet-j"):
+                                 j = i MOD 4
+            transformed-octet-i = original-octet-i XOR masking-key-octet-j
+            """
             for byte in range(len(payload)):
                message.append(payload[byte] ^ mask[byte % 4]) # xor to unmask the data
             message = message.decode("utf-8")
